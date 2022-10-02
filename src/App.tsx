@@ -2,24 +2,26 @@ import * as React from 'react';
 import { Admin, ListGuesser, Resource } from 'react-admin';
 import authProvider from './authProvider';  
 import { Login, Layout } from './layout';
-import { Dashboard } from './dashboard';
+
 import { lightTheme } from './layout/themes';
-import dataProvider from './dataProvider'
-import users from './users';
-import reviews from './reviews';
-import routes from './routes';
+import { dataProvider } from './dataProvider';
+import users from './pages/users';
+import routes from './pages/routes';
+import reviews from './pages/reviews';
+import { Dashboard } from './pages/dashboard';
+
 
 
 
 const App = () => {
     return (
-        <Admin
+        <Admin 
             title="SIT ADMIN"
             dataProvider={dataProvider}
             authProvider={authProvider}
             loginPage={Login}
             layout={Layout}
-
+            dashboard={Dashboard}
             disableTelemetry
             theme={lightTheme}
         >
