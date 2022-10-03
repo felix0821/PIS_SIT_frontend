@@ -12,11 +12,13 @@ import {
     useSidebarState,
 } from 'react-admin';
 
-import users from '../users';
-import alerts from '../alerts';
+
+import alerts from '../pages/alerts';
 import units from '../units';
-import roads from '../routes';
-import reviews from '../reviews';
+import users from '.././pages/users';
+import routes from '.././pages/routes';
+import reviews from '.././pages/reviews';
+
 import SubMenu from './SubMenu';
 
 type MenuName =  'menuSit';
@@ -45,7 +47,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                     }),
             }}
         >
-            <DashboardMenuItem />
+            <DashboardMenuItem/>
             <MenuItemLink
                 to="/users"
                 state={{ _scrollToTop: true }}
@@ -95,7 +97,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                     primaryText={translate(`Rutas`, {
                         smart_count: 2,
                     })}
-                    leftIcon={<roads.icon />}
+                    leftIcon={<routes.icon />}
                     dense={dense}
                 />
             </SubMenu>

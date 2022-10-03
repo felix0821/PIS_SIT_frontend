@@ -87,6 +87,7 @@ export const lightTheme = {
                     color: '#808080',
                     backgroundColor: '#fff',
                 },
+
             },
         },
         MuiLinearProgress: {
@@ -99,5 +100,5 @@ export const lightTheme = {
                 },
             },
         },
-    },
+    }
 };
