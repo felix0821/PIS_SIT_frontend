@@ -15,6 +15,7 @@ export const Enviroment = {
     USER_DELETE: 'person/delete',
     USER_UPDATE: 'person/update',
     USER_VERIFY_EMAIL: 'person/query/verify-email/',
+    USER_VERIFY_DOCUMENT: 'person/query/verify-identification/',
 
     REVIEWS: 'service-rating'
 

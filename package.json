@@ -3,7 +3,7 @@
     "version": "4.0.0",
     "private": true,
     "dependencies": {
-        "@material-ui/core": "^4.12.4",
+        "@material-ui/core": "^4.3.3",
         "@mui/icons-material": "^5.0.1",
         "@mui/material": "^5.0.2",
         "@mui/x-date-pickers": "^5.0.3",
@@ -62,5 +62,5 @@
         "node": "16.x",
         "npm": "8.x",
         "yarn": "1.22.19"
-      }
+    }
 }

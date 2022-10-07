@@ -1,9 +1,11 @@
 import { Button, CircularProgress, Grid, Step, StepLabel, Stepper } from "@mui/material";
 import { Form, Formik, FormikConfig, FormikValues } from "formik";
 import React, { useState } from "react";
+import { useNotify } from "react-admin";
 
 export interface FormikStepProps extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
     label: string;
+    onNext?: (values: FormikValues)=>any
 }
 
 export function FormikStep({ children }: FormikStepProps) {
@@ -18,6 +20,7 @@ export function FormikStepper({ children, ...props }: FormikConfig<FormikValues>
     function isLastStep() {
         return step === childrenArray.length - 1
     }
+    const notify = useNotify();
 
     function isoneStep() {
         return step === 1
@@ -27,6 +30,17 @@ export function FormikStepper({ children, ...props }: FormikConfig<FormikValues>
             {...props}
             validationSchema={currentChild.props.validationSchema}
             onSubmit={async (values, helpers) => {
+
+                if(currentChild.props.onNext){
+                    let res = await currentChild.props.onNext(values)
+                    console.log(res)
+                    if (!res) return
+
+                }else{
+                    console.log("No exists")
+                }
+
+                
                 if (isLastStep()) {
                     await props.onSubmit(values, helpers);
                     setCompleted(true);
@@ -69,7 +83,7 @@ export function FormikStepper({ children, ...props }: FormikConfig<FormikValues>
                                 type="submit"
 
                             >
-                                {isSubmitting ? 'Submitting' : isLastStep() ? 'Confirmar' : 'Siguiente'}
+                                {isSubmitting ? 'Enviando' : isLastStep() ? 'Terminar' : 'Siguiente'}
                             </Button>
                         </Grid>
                     </Grid>

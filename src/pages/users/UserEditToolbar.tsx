@@ -46,12 +46,13 @@ const UserEditToolbar = ({ onFinish, ...props }: Props) => {
                 <Fragment>
                     <SaveButton
                         mutationOptions={{
-                            onSuccess: () => {
-                                notify('ra.notification.updated', {
+                            onSuccess: (data, vars, g) => {
+                                notify('Proceso exitoso', {
                                     type: 'info',
                                     messageArgs: { smart_count: 1 },
                                     undoable: true,
                                 });
+                                console.log(g)
                                 //redirect('list', 'users');
                                 onFinish()
                             },
