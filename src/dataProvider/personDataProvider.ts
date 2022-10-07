@@ -2,12 +2,13 @@ import { combineDataProviders, fetchUtils } from 'react-admin';
 import { stringify } from 'query-string';
 import { useHeaderWithToken } from '../custom-hooks';
 import { Enviroment } from '../enviroment';
+import { JavascriptOutlined } from '@mui/icons-material';
 
 const apiUrl = Enviroment.URL_BASE;
 const httpClient = fetchUtils.fetchJson;
 
 export const personDataProvider = {
-    
+
     verifyEmail: (resource: string, email: any) => {
         resource = Enviroment.USER_VERIFY_EMAIL
 
@@ -15,9 +16,51 @@ export const personDataProvider = {
 
         const { headers } = useHeaderWithToken()
 
-        return httpClient(url,{headers: headers}).then(({ json }) => {
+        return httpClient(url, { headers: headers }).then(({ json, status }) => {
             return {
-                data: json,
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
+        });
+    },
+    verifyDocument: (resource: string, props: any) => {
+
+        let documentId = props.documentId
+        let value = props.value
+        resource = Enviroment.USER_VERIFY_DOCUMENT
+
+        const url = `${apiUrl}/${resource}?document=${documentId}&value=${value}`;
+        console.log(url)
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(url, { headers: headers }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
+        });
+    },
+    registerUser: (resource: string, params: any) => {
+
+        resource = Enviroment.USER_REGISTER;
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+            headers: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
             }
         });
     },
@@ -30,9 +73,9 @@ export const personDataProvider = {
             personId: string;
             roleId: string
         }
-        
+
         const { headers } = useHeaderWithToken()
-    
+
         return httpClient(`${apiUrl}/${Enviroment.USER_REGISTER}`, {
             method: 'POST',
             body: JSON.stringify(values),
@@ -52,7 +95,7 @@ export const personDataProvider = {
                 method: 'POST',
                 body: JSON.stringify(valor),
                 headers: headers
-            })).then( res => (
+            })).then(res => (
                 {
                     data: [true]
                 }
@@ -79,7 +122,7 @@ export const personDataProvider = {
 
         const { headers } = useHeaderWithToken()
 
-        return httpClient(url,{headers: headers}).then(({ json }) => {
+        return httpClient(url, { headers: headers }).then(({ json }) => {
 
             if (resource == "transport-company/dropdown") {
                 for (let i = 0; i < json.length; ++i) {
@@ -104,7 +147,7 @@ export const personDataProvider = {
         const { headers } = useHeaderWithToken()
 
 
-        return httpClient(url, {headers: headers}).then(({ json }) => ({
+        return httpClient(url, { headers: headers }).then(({ json }) => ({
             data: json,
         }))
     },
@@ -137,8 +180,19 @@ export const personDataProvider = {
     },
 
     create: (resource: string, params: any) => {
-        return httpClient(``, {
-        }).then(({ json }) => ({ data: json }));
+
+        //Dont use this method
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+            //sheaders: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                }
+            }
+        });
     },
 
     update: (resource: string, params: any) => {
@@ -151,7 +205,10 @@ export const personDataProvider = {
             method: 'PUT',
             body: JSON.stringify(params.data),
             headers: headers
-        }).then(({ json }) => ({ data: json }))
+        }).then(({ json }) => {
+            json.id = 0
+            return { data: json }
+        })
     },
 
 

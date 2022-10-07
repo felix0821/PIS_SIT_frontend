@@ -11,6 +11,7 @@ interface DatePickerFieldProps {
   name: string,
   label: string,
   children?: React.ReactNode
+  setFieldValue?: any
 }
 
 

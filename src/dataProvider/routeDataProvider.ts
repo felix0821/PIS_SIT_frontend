@@ -19,15 +19,16 @@ export const routeDataProvider =  {
         const { headers } = useHeaderWithToken()
 
 
-        return httpClient(url, {headers: headers}).then(({ json }) => {
+        return httpClient(url, {headers: headers}).then(({ json, status }) => {
 
-            for (let i = 0; i < json.length; ++i) {
+            /*for (let i = 0; i < json.length; ++i) {
                 json[i].id = json[i].value
-            }
+            }*/
 
             return {
                 data: json,
-                total: json.length
+                status: status
+                //total: json.length
             }
         });
     },

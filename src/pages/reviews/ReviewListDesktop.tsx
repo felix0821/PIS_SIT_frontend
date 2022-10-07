@@ -13,6 +13,9 @@ import rowStyle from './rowStyle';
 
 import BulkAcceptButton from './BulkAcceptButton';
 import BulkRejectButton from './BulkRejectButton';
+import { Rating, Typography } from '@mui/material';
+import StarRatingField2 from './StarRatingField2';
+import Temporal from './Temporal';
 
 export interface ReviewListDesktopProps {
     selectedRow?: Identifier;
@@ -28,10 +31,11 @@ const ReviewsBulkActionButtons = () => (
 
 const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
     <Datagrid
-        rowClick="edit"
+        //rowClick="edit"
         rowStyle={rowStyle(selectedRow)}
         optimized
-        bulkActionButtons={<ReviewsBulkActionButtons />}
+        //bulkActionButtons={<ReviewsBulkActionButtons />}
+        bulkActionButtons={false}
         sx={{
             '& .RaDatagrid-thead': {
                 borderLeftColor: 'transparent',
@@ -46,9 +50,11 @@ const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
             },
         }}
     >
-        <TextField source="routeName" label="Nombre de ruta"/>
-        <TextField source="score" label="Puntuación"/>
-        <TextField source="time" label="Fecha y Hora"/>
+        <TextField source="routeName" label="Nombre de ruta" />
+        <StarRatingField size="small" label="Calififcación" />
+        <StarRatingField2 size="small" label="Calififcación" />
+        <Temporal label="Comentario"></Temporal>
+        <DateField source='time' label="Fecha y Hora" />
     </Datagrid>
 );
 
