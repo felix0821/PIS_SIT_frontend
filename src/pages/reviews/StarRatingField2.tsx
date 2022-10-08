@@ -8,7 +8,7 @@ interface OwnProps {
     size?: 'large' | 'small';
 }
 
-const StarRatingField = ({ size = 'large' }: FieldProps & OwnProps) => {
+const StarRatingField2 = ({ size = 'large' }: FieldProps & OwnProps) => {
     const record = useRecordContext();
     if (!record) return null;
 
@@ -21,24 +21,14 @@ const StarRatingField = ({ size = 'large' }: FieldProps & OwnProps) => {
                 whiteSpace: 'nowrap',
             }}
         >
-            {Array(record.score)
-                .fill(true)
-                .map((_, i) => (
-                    <Icon
-                        key={i}
-                        sx={{
-                            width: size === 'large' ? 20 : 15,
-                            height: size === 'large' ? 20 : 15,
-                        }}
-                    />
-                ))}
+            <Rating name="read-only" value={record.score} readOnly />
         </Box>
     );
 };
 
-StarRatingField.defaultProps = {
+StarRatingField2.defaultProps = {
     label: 'resources.reviews.fields.rating',
     source: 'rating',
 };
 
-export default StarRatingField;
+export default StarRatingField2;

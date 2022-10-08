@@ -27,7 +27,6 @@ export const reviewDataProvider =  {
 
 
         return httpClient(url, {headers: headers}).then(({ json }) => {
-
             return {
                 data: json,
                 total: json.length

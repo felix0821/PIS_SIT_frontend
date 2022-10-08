@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Create, required, CreateProps, email, minLength, maxLength, useDataProvider, Loading, Error, useNotify, useListContext } from 'react-admin';
-import { Box, CardHeader, CardContent, Button, Stepper, Step, StepLabel, Grid, CircularProgress, useMediaQuery, useTheme, IconButton } from '@mui/material';
+import { Create, required, CreateProps, email, minLength, maxLength, useDataProvider, Loading, Error, useNotify, useListContext, SelectField } from 'react-admin';
+import { Box, CardHeader, CardContent, Button, Stepper, Step, StepLabel, Grid, CircularProgress, useMediaQuery, useTheme, IconButton, Typography } from '@mui/material';
 import { Person } from '../../types';
 import { Field, Form, Formik, FormikConfig, FormikValues } from 'formik';
 import { TextField, Select } from 'formik-material-ui';
+
 import axios from 'axios';
 import "./formik.css"
 
 //import { ProductEditDetails } from './ProductEditDetails';
 import { useState, useEffect } from 'react';
-import { object, string} from 'yup';
+import { object, string } from 'yup';
 
 //
 import { fetchUtils } from 'react-admin';
@@ -19,6 +20,7 @@ import { Close, Height } from '@mui/icons-material';
 import DatePickerField from './DatePickerField'
 import { FormikStep, FormikStepper } from './FormikStepper';
 import { useHeaderWithToken } from '../../custom-hooks';
+import { UserSelectRoleForm } from './UserSelectRoleForm';
 const apiUrl = 'https://sit-backend.herokuapp.com';
 const httpClient = fetchUtils.fetchJson;
 
@@ -112,22 +114,131 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
 
     const { refetch } = useListContext()
 
+    const [currentUserId, setCurrentUserId] = useState('')
 
-    async function debouncedApi(email: any){
+    //const [isRoleSelected, setIsRoleSelected] = useState(false)
+    const [roleIdSelected, setRoleIdSelected] = useState('')
+    const [changueForm, setChangueForm] = useState(false)
+
+
+    const step1Handle = async (email: string) => {
         //retorna si email está disponible
         let res = await dataProvider.verifyEmail('users', email)
             .then(({ data }: any) => {
                 return data
             })
             .catch((error: any) => {
-                setError(error);
+                /*console.log("status: " + error.status)
+                console.log("message: " + error.message)
+                console.log("body: " + error.body.content)*/
+                setError(error)
                 setLoading(false);
-                return "ERROR PAISAFwesf"
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
             })
-        console.log(res.content)
-        let resp = (res.content == "El nombre de usuario o correo electrónico está disponible.")
+        console.log(JSON.stringify(res))
+        let resp = (res.status == 200)
+
         return resp
     }
+
+    const step2Handle = async (values: FormikValues) => {
+        //retorna si documento está disponible
+        let documentId = values.personIdentification.documentId
+        let value = values.personIdentification.identificationValue
+        let res = await dataProvider.verifyDocument('users', { documentId, value })
+            .then(({ data }: any) => {
+                return data
+            })
+            .catch((error: any) => {
+                setError(error)
+                setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (!(res.status == 200)) return false
+
+        let resp = true
+
+        let createUserRes = await dataProvider.registerUser('users', { data: values })
+            .then(({ data }: any) => {
+                notify('Code ' + data.status + ': ' + 'Usuario creado con id ' + data.message, {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data
+            })
+            .catch((error: any) => {
+                setError(error)
+                setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (!(createUserRes.status == 201)) return false
+
+        setCurrentUserId(createUserRes.message)
+        console.log(currentUserId)
+
+        return true
+    }
+
+    const step3Handle = async (values: FormikValues) => {
+
+        let res = await dataProvider.verifyEmail('users', email)
+            .then(({ data }: any) => {
+                return data
+            })
+            .catch((error: any) => {
+                setError(error)
+                setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        console.log(JSON.stringify(res))
+        let resp = (res.status == 200)
+
+        return resp
+    }
+
+    /*const handleChangeRole = (roleId: any) => {
+        console.log("prueba: "+roleId)
+        setRoleIdSelected(roleId);
+        setRoleIdSelected(roleId);
+        //if(!isRoleSelected) setIsRoleSelected(true);
+        console.log("guardado"+roleIdSelected)
+        setRoleIdSelected(roleId);
+        console.log("guardado"+roleIdSelected)
+
+    }*/
 
 
     useEffect(() => {
@@ -137,7 +248,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
             .then(({ data }: any) => {
                 setRoles(data);
                 setLoading(false);
-                console.log(roles)
+                //console.log(roles)
 
             })
             .catch((error: any) => {
@@ -157,10 +268,18 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
             })
     }, [])
 
-    if (loading) return <Loading />;
+    if (loading) return <Box sx={smDown ? styleMobile : mdDown ? styleTablet : style}
+    >
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <CircularProgress sx={{ marginY: 4 }} />
+            <Typography variant="h5" component="h5" sx={{ marginY: 2 }}>
+                Cargando
+            </Typography>
+        </Box>
+    </Box>
     if (!roles) return null;
 
-    
+
 
     return (
 
@@ -194,69 +313,13 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
 
                     }}
                     onSubmit={async (values) => {
-
-                        let { data } = await dataProvider.registerUserWithRole('users', values)
-
-                        if(data[0]){
-                            notify('ra.notification.created', {
-                                type: 'info',
-                                messageArgs: { smart_count: 1 },
-                                undoable: true,
-                            });
-                            onCancel()
-                            refetch()
-                        } else {
-                            notify('Ha ocurrido un error', {
-                                type: 'info',
-                                messageArgs: { smart_count: 1 },
-                                undoable: true,
-                            });
-                            onCancel()
-                        }
-
-                        /*interface InterfaceUserRole {
-                            personId: string;
-                            roleId: string
-                        }
-                        
-                        const { headers } = useHeaderWithToken()
-                    
-                        await httpClient(`${apiUrl}/person/register-web`, {
-                            method: 'POST',
-                            body: JSON.stringify(values),
-                            headers: headers
-                        })
-                            .then(valor => {
-                                let val = valor.body
-                                let uno = val.indexOf(":")
-                                let val1 = val.substring(uno + 2, val.length - 2)
-                                let objeto: InterfaceUserRole = {
-                                    personId: val1,
-                                    roleId: values['rol']
-                                }
-                                return objeto
-                            })
-                            .then(valor => httpClient(`${apiUrl}/person/role/register`, {
-                                method: 'POST',
-                                body: JSON.stringify(valor),
-                                headers: headers
-                            })).then( res => {
-                                notify('ra.notification.created', {
-                                    type: 'info',
-                                    messageArgs: { smart_count: 1 },
-                                    undoable: true,
-                                });
-                                onCancel()
-                            }).catch(error => {
-                                notify('Ha ocurrido un error', {
-                                    type: 'info',
-                                    messageArgs: { smart_count: 1 },
-                                    undoable: true,
-                                });
-                                onCancel()
-                            })*/
-
-
+                        notify('Listo', {
+                            type: 'info',
+                            messageArgs: { smart_count: 1 },
+                            undoable: false,
+                        });
+                        onCancel()
+                        refetch()
                     }}
 
 
@@ -265,11 +328,17 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                         label="Datos Cuenta"
                         validationSchema={object({
                             username: string().email('Correo electrónico no valido')
-                            .test("unique_email", "Email already registered", async (email, values) => {
-                                const response = await debouncedApi(email);
-                                return response;
-                              }).required('No puedes dejar este campo en blanco!')
+                                /*.test("unique_email", "Email already registered", async (email, values) => {
+                                    const response = await debouncedApi(email);
+                                    return response;
+                                  })*/
+
+                                .required('No puedes dejar este campo en blanco!')
                         })}
+                        onNext={async (values: FormikValues) => {
+                            const response = await step1Handle(values.username);
+                            return response;
+                        }}
                     >
                         <Box paddingBottom={2}>
                             <Field fullWidth type="email" name="username" component={TextField} label="Correo Electrónico" />
@@ -287,6 +356,11 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                             })
 
                         })}
+                        onNext={async (values: FormikValues) => {
+                            const response = await step2Handle(values);
+
+                            return response;
+                        }}
 
                     >
                         <Box display="flex" flexDirection={mdDown ? "column" : "row"} gap={mdDown ? 0 : 3}>
@@ -333,13 +407,36 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                         validationSchema={object({
                             rol: string().required('No puedes dejar este campo en blanco!').min(1)
                         })}
+
                     >
                         <Box padding={2} >
-                            <Field fullWidth name="rol" component={Select} label="Seleccionar Rol">
+                            <Field
+                                fullWidth
+                                name="rol"
+                                component={Select}
+                                label="Seleccionar Rol"
+                                onChange={(e: any, { props }: FormikValues) => {
+                                    console.log(JSON.stringify(props))
+                                    setRoleIdSelected(props.value)
+                                    //handleChangeRole(props.value)
+                                    //handleChangeRole(props.value)
+                                    setChangueForm(!changueForm)
+
+                                }}
+                            >
                                 {!loading && roles.map((rol) =>
                                     <MenuItem key={rol.value} value={rol.value}>{rol.text}</MenuItem>
                                 )}
                             </Field>
+
+                            {(changueForm && (roleIdSelected != '')) && (
+                                <UserSelectRoleForm roleId={roleIdSelected} userId={currentUserId}></UserSelectRoleForm>
+                            )}
+
+                            {(!changueForm && (roleIdSelected != '')) && (
+                                <UserSelectRoleForm roleId={roleIdSelected} userId={currentUserId}></UserSelectRoleForm>
+                            )}
+
                         </Box>
                     </FormikStep>
                 </FormikStepper>

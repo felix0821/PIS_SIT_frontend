@@ -6,12 +6,7 @@ import {
     SimpleForm,
     DateField,
     EditProps,
-    Labeled,
-    Toolbar,
-    SaveButton,
-    useNotify,
-    DateInput,
-    PasswordInput,
+    DateInput
 } from 'react-admin';
 import { Box, Grid, Stack, IconButton, Typography, useTheme, useMediaQuery } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -19,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 //import StarRatingField from './StarRatingField';
 import { Review, User } from '../../types';
 import UserEditToolbar from './UserEditToolbar';
+import DatePickerField from './DatePickerField';
 
 
 const style = {
@@ -126,12 +122,15 @@ const UserEdit = ({ onCancel, ...props }: Props) => {
                                 maxRows={1}
                                 fullWidth
                             />
-                            {/*<TextInput
+
+                            <DateInput
                                 source="birth"
                                 maxRows={1}
                                 fullWidth
                             />
-                            <TextInput
+
+                            
+                            {/*<TextInput
                                 source="email"
                                 maxRows={1}
                                 fullWidth
