@@ -19,17 +19,18 @@ export const reviewDataProvider =  {
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
             filter: JSON.stringify(params.filter),
         };
+        console.log(page)
 
         resource = Enviroment.REVIEWS
-        const url = `${apiUrl}/${resource}`;
+        const url = `${apiUrl}/${resource}?page=${page}`;
 
         const { headers } = useHeaderWithToken()
 
 
         return httpClient(url, {headers: headers}).then(({ json }) => {
             return {
-                data: json,
-                total: json.length
+                data: json.allItems,
+                total: json.elements
             }
         });
 

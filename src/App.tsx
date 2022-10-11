@@ -24,6 +24,7 @@ const App = () => {
             dashboard={Dashboard}
             disableTelemetry
             theme={lightTheme}
+            
         >
             <Resource name="users" {...users} />
             <Resource name="alerts" list={ListGuesser} />

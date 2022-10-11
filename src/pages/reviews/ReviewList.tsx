@@ -34,7 +34,7 @@ const ReviewList = () => {
                     marginRight: !!match ? '400px' : 0,
                 }}
                 filters={reviewFilters}
-                perPage={10}
+                perPage={5}
                 sort={{ field: 'date', order: 'DESC' }}
             >
                 {isXSmall ? (
