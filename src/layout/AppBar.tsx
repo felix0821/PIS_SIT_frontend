@@ -9,8 +9,12 @@ import {
     Typography,
     useMediaQuery,
     Theme,
+    Icon,
+    IconButton,
+    Button,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import AlertsMenu from './AlertsMenu';
 
 const Perfil = React.forwardRef((props, ref) => {
     const translate = useTranslate();
@@ -23,6 +27,7 @@ const Perfil = React.forwardRef((props, ref) => {
             to="/perfil"
         >
             <ListItemIcon>
+                <PersonIcon />
                 <PersonIcon />
             </ListItemIcon>
             <ListItemText>{translate('Perfil')}</ListItemText>
@@ -51,7 +56,7 @@ const CustomAppBar = (props: any) => {
                 variant="h6"
                 color="inherit"
                 sx={{
-                    flex: 1,
+                    flex: 5,
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -59,8 +64,13 @@ const CustomAppBar = (props: any) => {
                 }}
                 id="react-admin-title"
             />
+            <Box sx={{flex: 1, display: 'flex',justifyContent: 'end'}}>
+            <AlertsMenu />
+            </Box>
+            
+            
            
-            {isLargeEnough && <Box component="span" sx={{ flex: 1 }} />}
+            {isLargeEnough && <Box component="span" sx={{ flex: 0 }} />}
         </AppBar>
     );
 };

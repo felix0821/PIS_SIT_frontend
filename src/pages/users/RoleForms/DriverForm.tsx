@@ -68,7 +68,7 @@ export default function DriverForm(props: DriverFormProps) {
         ]
 
 
-        /*dataProvider.getTransportCompany('routes')
+        dataProvider.getTransportCompany('routes')
             .then(({ data }: any) => {
                 //setTransportCompanyItems(data)
                 //setLoading(false);
@@ -79,7 +79,7 @@ export default function DriverForm(props: DriverFormProps) {
                 console.log('Error ' + error.status + ': ' + error.body.content)
                 //setLoading(false);
             })
-*/
+
 
         /*dataProvider.getConcesionary('routes', 'otro valoe')
         .then(({ data }: any) => {

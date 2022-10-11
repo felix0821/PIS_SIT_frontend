@@ -19,10 +19,13 @@ const Temporal = ({ size = 'large' }: FieldProps & OwnProps) => {
             sx={{
                 opacity: 0.87,
                 whiteSpace: 'nowrap',
+                maxWidth: '18em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
             }}
         >
             <Typography variant="caption" display="block" gutterBottom>
-            Aqupi va el comentario
+            {record.comment}
             </Typography>
         </Box>
     );
