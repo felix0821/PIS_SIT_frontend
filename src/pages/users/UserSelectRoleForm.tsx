@@ -13,7 +13,7 @@ interface UserSelectRoleFormProps {
 
 
 
-export const UserSelectRoleForm = ({ roleId }: UserSelectRoleFormProps) => {
+export const UserSelectRoleForm = ({ roleId, userId }: UserSelectRoleFormProps) => {
 
 
     const [role, setRole] = useState(roleId)
@@ -46,7 +46,8 @@ export const UserSelectRoleForm = ({ roleId }: UserSelectRoleFormProps) => {
                     setTransportCompanyRegistered={setTransportCompanyRegistered}
                     transportCompanyRegistered={transportCompanyRegistered}
                     currentData={savedConcesionaryOperator}
-                    updateData={setSavedConcesionaryOperator} />
+                    updateData={setSavedConcesionaryOperator}
+                    userId={userId} />
             )}
 
             {role == "1000002000003" && (
@@ -57,6 +58,7 @@ export const UserSelectRoleForm = ({ roleId }: UserSelectRoleFormProps) => {
                 <DriverForm 
                     setDriverTransportCompanyRegistered={setDriverTransportCompanyRegistered}
                     driverTransportCompanyRegistered={driverTransportCompanyRegistered}
+                    userId={userId}
                      />
             )}
 

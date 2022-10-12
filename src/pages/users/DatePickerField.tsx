@@ -12,6 +12,7 @@ interface DatePickerFieldProps {
   label: string,
   children?: React.ReactNode
   setFieldValue?: any
+  disable: boolean
 }
 
 
@@ -30,7 +31,7 @@ const DatePickerField = (props: DatePickerFieldProps) => {
           setFieldValue(props.name, newValue)
         }}
         renderInput={(params: any) => (
-            <TextField {...params} name={props.name} sx={{ width: '100%' }} error={errors.dateBirth} helperText={errors.dateBirth} />
+            <TextField {...params} name={props.name} sx={{ width: '100%' }} error={errors.dateBirth} helperText={errors.dateBirth} disabled={props.disable}/>
         )}
       />
     </LocalizationProvider>
