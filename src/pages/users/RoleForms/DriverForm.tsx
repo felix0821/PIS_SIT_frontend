@@ -3,11 +3,12 @@ import { Box, Button, IconButton, List, ListItem, ListItemText, SelectChangeEven
 import React, { useEffect, useState } from 'react'
 import { useDataProvider, useNotify } from 'react-admin';
 import CustomSelect from '../CustomSelect'
+import SelectVehicleAutocomplete from './components/SelectVehicleAutocomplete';
 
 interface DriverFormProps {
     setDriverTransportCompanyRegistered: (newOp: any) => any
     driverTransportCompanyRegistered: boolean
-
+    userId: any
 }
 
 interface VehicleItem {
@@ -36,7 +37,7 @@ export default function DriverForm(props: DriverFormProps) {
     const dataProvider = useDataProvider();
     const notify = useNotify();
 
-    const setData = (id: any) => {
+    const setData = async (id: any) => {
 
         if (id.value == '') {
             notify('Seleccione vehiculo por favor', {
@@ -48,29 +49,43 @@ export default function DriverForm(props: DriverFormProps) {
         }
 
         //guardar en base de datos
-        setVehicleRegistered(true)
+        let vehiUser = await dataProvider.registerUserInVehicle('routes', { data: { vehicleId: vehicle.value, personId: props.userId } })
+            .then(({ data }: any) => {
+                setTransportCompanyItems(data)
+                setTransportCompanyItems(data)
+                //setLoading(false);
+                //console.log(data);
+                setVehicleRegistered(true)
+                notify('Vehiculo guardado', {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+            })
+            .catch((error: any) => {
+                //setError(error);
+                console.log('Error ' + error.status + ': ' + error.body.content)
+                //setLoading(false);
+            })
+
+        if (!(vehiUser.status != 201)) return
+
+        //setVehicleRegistered(true)
         //end save
-        notify('Vehiculo guardado', {
+        /*notify('Vehiculo guardado', {
             type: 'success',
             messageArgs: { smart_count: 1 },
             undoable: false,
-        });
+        });*/
     }
 
 
     useEffect(() => {
 
-        const companies = [
-            { value: "1655665", text: "empresa 1" },
-            { value: "286686", text: "empresa 2" },
-            { value: "254132132", text: "empresa 3" },
-            { value: "448546531123", text: "empresa 4" }
-        ]
-
-
         dataProvider.getTransportCompany('routes')
             .then(({ data }: any) => {
-                //setTransportCompanyItems(data)
+                setTransportCompanyItems(data)
+                setTransportCompanyItems(data)
                 //setLoading(false);
                 console.log(data);
             })
@@ -79,23 +94,6 @@ export default function DriverForm(props: DriverFormProps) {
                 console.log('Error ' + error.status + ': ' + error.body.content)
                 //setLoading(false);
             })
-
-
-        /*dataProvider.getConcesionary('routes', 'otro valoe')
-        .then(({ data }: any) => {
-            //setTransportCompanyItems(data)
-            //setLoading(false);
-            console.log(data);
-        })
-        .catch((error: any) => {
-            setError(error);
-            console.log(error)
-            //setLoading(false);
-        })*/
-
-
-        setTransportCompanyItems(companies)
-        //setLoading(false)
 
     }, [])
 
@@ -127,20 +125,6 @@ export default function DriverForm(props: DriverFormProps) {
 
         setVehicle({ value: '', text: '' })
 
-        let vehiclesPlane: VehicleItem[] = [
-            { value: "178575", text: "vehicle 1" },
-            { value: "78578572", text: "vehicle 2" },
-            { value: "27575", text: "vehicle 3" },
-            { value: "4578875", text: "vehicle 4" }
-        ]
-
-        if (vehicleItems.length == 0) setVehicleItems(vehiclesPlane)
-        else {
-            setVehicleItems(vehiclesPlane)
-        }
-
-        console.log(vehicleItems)
-
     }
 
     const handleChangedVehicle = (event: SelectChangeEvent) => {
@@ -155,6 +139,24 @@ export default function DriverForm(props: DriverFormProps) {
             }
         }
 
+    }
+
+    const updateVehicles = () => {
+
+        dataProvider.getVehicle('routes', { id: transportCompany.value })
+            .then(({ data }: any) => {
+                setVehicleItems(data)
+                setVehicleItems(data)
+                //setLoading(false);
+                //console.log(data);
+            })
+            .catch((error: any) => {
+                //setError(error);
+                console.log('Error ' + error.status + ': ' + error.body.content)
+                //setLoading(false);
+            })
+
+        console.log(vehicleItems)
     }
 
     const handleClickSetTransportCompany = () => {
@@ -173,9 +175,10 @@ export default function DriverForm(props: DriverFormProps) {
             undoable: false,
         });
 
+        updateVehicles()
+
 
     }
-    console.log(props.driverTransportCompanyRegistered)
 
 
 
@@ -228,6 +231,31 @@ export default function DriverForm(props: DriverFormProps) {
                     >Guardar</Button>
                 </Box>
             )}
+
+            <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                O busque el vehiculo por placa:
+            </Typography>
+            
+            <Box display='flex' width={'100%'}>
+                    <Box sx={{ flex: '1 1 auto' }}>
+                        <SelectVehicleAutocomplete />
+                    </Box>
+                    <Button
+                        color='secondary'
+                        size='small'
+                        variant='contained'
+                        sx={{ marginY: 2, marginX: 1 }}
+                        onClick={ () => {
+                            notify('Función no implementada', {
+                                type: 'info',
+                                messageArgs: { smart_count: 1 },
+                                undoable: false,
+                            });
+                        }
+                            /*() => deleteData(id)*/}
+
+                    >Guardar</Button>
+                </Box>
 
         </>
     )

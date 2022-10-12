@@ -50,6 +50,7 @@ const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
             },
         }}
     >
+        <TextField source="index" label="" />
         <TextField source="routeName" label="Nombre de ruta" />
         
         <StarRatingField2 size="small" label="Calififcación" />

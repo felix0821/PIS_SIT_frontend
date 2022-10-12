@@ -22,7 +22,7 @@ export const reviewDataProvider =  {
         console.log(page)
 
         resource = Enviroment.REVIEWS
-        const url = `${apiUrl}/${resource}?page=${page}`;
+        const url = `${apiUrl}/${resource}?page=${page}&perPage=${perPage}`;
 
         const { headers } = useHeaderWithToken()
 
