@@ -115,10 +115,13 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     const { refetch } = useListContext()
 
     const [currentUserId, setCurrentUserId] = useState('')
+    const [disableFieldBirth, setDisableFieldBirth] = useState(false)
 
     //const [isRoleSelected, setIsRoleSelected] = useState(false)
     const [roleIdSelected, setRoleIdSelected] = useState('')
+    const [roleNameSelected, setRoleNameSelected] = useState('')
     const [changueForm, setChangueForm] = useState(false)
+    const [activeSelectRole, setActiveSelectRole] = useState(false)
 
 
     const step1Handle = async (email: string) => {
@@ -173,6 +176,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         if (!(res.status == 200)) return false
 
         let resp = true
+        setDisableFieldBirth(true)
 
         let createUserRes = await dataProvider.registerUser('users', { data: values })
             .then(({ data }: any) => {
@@ -239,6 +243,33 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         console.log("guardado"+roleIdSelected)
 
     }*/
+
+    const setRoleInUser = async (userId: any, roleId: any) => {
+        let createUserInRole = await dataProvider.registerUserInRole('users', { data: {userId: userId, roleId: roleId} })
+            .then(({ data }: any) => {
+                notify('Code ' + data.status + ': ' + 'Rol asignado ' + data.message, {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data
+            })
+            .catch((error: any) => {
+                //setError(error)
+                //setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (createUserInRole.status == 201) return true
+        return false
+    }
 
 
     useEffect(() => {
@@ -375,7 +406,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                     <Field fullWidth type="text" name="lastnameMother" component={TextField} label="Apellido Materno" />
                                 </Box>
                                 <Box paddingBottom={2}>
-                                    <DatePickerField name="dateBirth" label="Fecha de Nacimiento" />
+                                    <DatePickerField name="dateBirth" label="Fecha de Nacimiento" disable={disableFieldBirth}/>
                                 </Box>
                             </Box>
 
@@ -410,24 +441,48 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
 
                     >
                         <Box padding={2} >
-                            <Field
-                                fullWidth
-                                name="rol"
-                                component={Select}
-                                label="Seleccionar Rol"
-                                onChange={(e: any, { props }: FormikValues) => {
-                                    console.log(JSON.stringify(props))
-                                    setRoleIdSelected(props.value)
-                                    //handleChangeRole(props.value)
-                                    //handleChangeRole(props.value)
-                                    setChangueForm(!changueForm)
+                            {
+                                !activeSelectRole ? (
+                                    <Field
+                                        fullWidth
+                                        name="rol"
+                                        component={Select}
+                                        label="Seleccionar Rol"
+                                        value=''
+                                        //hidden={false}
+                                        //disabled={activeSelectRole}
+                                        onChange={(e: any, { props }: FormikValues) => {
+                                            //console.log(JSON.stringify(props))
+                                            if (props.value == '') return
+                                            let result = roles.find(r=> r.value == props.value)
 
-                                }}
-                            >
-                                {!loading && roles.map((rol) =>
-                                    <MenuItem key={rol.value} value={rol.value}>{rol.text}</MenuItem>
-                                )}
-                            </Field>
+                                            if (!setRoleInUser(currentUserId ,props.value)) return
+
+                                            setRoleIdSelected(props.value)
+                                            setRoleIdSelected(props.value)
+                                            setRoleNameSelected(result.text)
+                                            setRoleNameSelected(result.text)
+                                            //handleChangeRole(props.value)
+                                            //handleChangeRole(props.value)
+                                            
+
+                                            setChangueForm(!changueForm)
+                                            setActiveSelectRole(true)
+
+                                        }}
+                                    >
+                                        <MenuItem value=''><em>None</em></MenuItem>
+                                        {!loading && roles.map((rol) =>
+                                            <MenuItem key={rol.value} value={rol.value}>{rol.text}</MenuItem>
+                                        )}
+                                    </Field>
+                                ) : (
+                                    <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                                        Rol seleccionado: {roleNameSelected}
+                                    </Typography>
+                                )
+                            }
+
 
                             {(changueForm && (roleIdSelected != '')) && (
                                 <UserSelectRoleForm roleId={roleIdSelected} userId={currentUserId}></UserSelectRoleForm>

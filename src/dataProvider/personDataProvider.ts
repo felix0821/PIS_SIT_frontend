@@ -51,7 +51,7 @@ export const personDataProvider = {
 
         const { headers } = useHeaderWithToken()
 
-        return httpClient(`${ apiUrl }/${ resource }`, {
+        return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
             body: JSON.stringify(params.data),
             headers: headers
@@ -65,45 +65,33 @@ export const personDataProvider = {
         });
     },
 
-    registerUserWithRole: (resource: string, data: any) => {
-
-        let values = data
+    registerUserInRole: (resource: string, params: any) => {
 
         interface InterfaceUserRole {
             personId: string;
             roleId: string
         }
 
+        let data: InterfaceUserRole = {
+            personId: params.data.userId,
+            roleId: params.data.roleId
+        }
+
         const { headers } = useHeaderWithToken()
 
-        return httpClient(`${apiUrl}/${Enviroment.USER_REGISTER}`, {
+        return httpClient(`${apiUrl}/${Enviroment.USER_REGISTER_ROL}`, {
             method: 'POST',
-            body: JSON.stringify(values),
+            body: JSON.stringify(data),
             headers: headers
+        }).then(({ json, status }) => {
+
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
         })
-            .then(valor => {
-                let val = valor.body
-                let uno = val.indexOf(":")
-                let val1 = val.substring(uno + 2, val.length - 2)
-                let objeto: InterfaceUserRole = {
-                    personId: val1,
-                    roleId: values['rol']
-                }
-                return objeto
-            })
-            .then(valor => httpClient(`${apiUrl}/${Enviroment.USER_REGISTER_ROL}`, {
-                method: 'POST',
-                body: JSON.stringify(valor),
-                headers: headers
-            })).then(res => (
-                {
-                    data: [true]
-                }
-            )).catch(error => (
-                {
-                    data: [false]
-                }
-            ))
     },
 
     getList: (resource: string, params: any) => {
@@ -183,7 +171,7 @@ export const personDataProvider = {
 
         //Dont use this method
 
-        return httpClient(`${ apiUrl }/${ resource }`, {
+        return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
             body: JSON.stringify(params.data),
             //sheaders: headers

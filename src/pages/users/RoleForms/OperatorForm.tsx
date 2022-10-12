@@ -1,4 +1,4 @@
-import { AddCircle, Delete } from '@mui/icons-material'
+import { AddCircle, Delete, Update } from '@mui/icons-material'
 import { Box, Button, IconButton, List, ListItem, ListItemText, SelectChangeEvent, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDataProvider, useNotify } from 'react-admin';
@@ -9,6 +9,7 @@ interface OperatorFormProps {
     updateData: (newOp: any) => any
     setTransportCompanyRegistered: (newOp: any) => any
     transportCompanyRegistered: boolean
+    userId: any
 
 }
 
@@ -27,19 +28,19 @@ export default function OperatorForm(props: OperatorFormProps) {
     const [transportCompanyItems, setTransportCompanyItems] = useState<TransportCompanyItem[]>([])
     const [concesionarioItems, setConcesionarioItems] = useState<ConcesionaryItem[]>([])
 
-    const [transportCompany, setTransportCompany] = useState<TransportCompanyItem>({value: '',text: ''})
-    const [concesionario, setConcesionario] = useState<ConcesionaryItem>({value: '',text: ''})
+    const [transportCompany, setTransportCompany] = useState<TransportCompanyItem>({ value: '', text: '' })
+    const [concesionario, setConcesionario] = useState<ConcesionaryItem>({ value: '', text: '' })
 
-    
+
 
 
     const dataProvider = useDataProvider();
     const notify = useNotify();
 
-    const addData = (id: any) => {
+    const addData = async (id: any) => {
 
-        if(id.value == ''){
-            notify('Seleccione concesionario por favor', {
+        if (id.value == '') {
+            notify('Seleccione ruta por favor', {
                 type: 'info',
                 messageArgs: { smart_count: 1 },
                 undoable: false,
@@ -52,7 +53,7 @@ export default function OperatorForm(props: OperatorFormProps) {
 
         for (let i = 0; i < current.length; i++) {
             if (id.value == current[i].value) {
-                notify('Concesionario ya registrado', {
+                notify('Ruta ya registrada', {
                     type: 'info',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -67,12 +68,38 @@ export default function OperatorForm(props: OperatorFormProps) {
             text: id.text
         }];
 
+        let assignConcession = await dataProvider.registerUserInConcesionary('routes', { data: { routeId: id.value, personId: props.userId } })
+            .then(({ data }: any) => {
+                notify('Code ' + data.status + ': ' + '' + data.message, {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data
+            })
+            .catch((error: any) => {
+                //setError(error)
+                //setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (assignConcession.status != 201) return
+
+
         props.updateData(newData)
-        notify('Concesionario agregado', {
+
+        /*notify('Ruta agregada', {
             type: 'success',
             messageArgs: { smart_count: 1 },
             undoable: false,
-        });
+        });*/
     }
 
     const deleteData = (id: any) => {
@@ -86,7 +113,7 @@ export default function OperatorForm(props: OperatorFormProps) {
         }
 
         props.updateData(newData)
-        notify('Concesionario eliminado', {
+        notify('Ruta eliminada', {
             type: 'info',
             messageArgs: { smart_count: 1 },
             undoable: false,
@@ -96,17 +123,9 @@ export default function OperatorForm(props: OperatorFormProps) {
 
     useEffect(() => {
 
-        const companies = [
-            { value: "1655665", text: "empresa 1" },
-            { value: "286686", text: "empresa 2" },
-            { value: "254132132", text: "empresa 3" },
-            { value: "448546531123", text: "empresa 4" }
-        ]
-
-
-        /*dataProvider.getTransportCompany('routes')
+        dataProvider.getTransportCompany('routes')
             .then(({ data }: any) => {
-                //setTransportCompanyItems(data)
+                setTransportCompanyItems(data)
                 //setLoading(false);
                 console.log(data);
             })
@@ -114,88 +133,59 @@ export default function OperatorForm(props: OperatorFormProps) {
                 //setError(error);
                 console.log('Error ' + error.status + ': ' + error.body.content)
                 //setLoading(false);
-            })*/
-
-
-        /*dataProvider.getConcesionary('routes', 'otro valoe')
-        .then(({ data }: any) => {
-            //setTransportCompanyItems(data)
-            //setLoading(false);
-            console.log(data);
-        })
-        .catch((error: any) => {
-            setError(error);
-            console.log(error)
-            //setLoading(false);
-        })*/
-
-
-        setTransportCompanyItems(companies)
-        //setLoading(false)
+            })
 
     }, [])
 
 
     const handleChangedTransportCompany = async (event: SelectChangeEvent) => {
-        if(event.target.value == ''){
-            setConcesionario({value: '', text: ''});
-        }else{
-            for( let e of transportCompanyItems){
-                if(e.value == event.target.value){
-                    setTransportCompany({value: event.target.value, text: e.text});
-                    setTransportCompany({value: event.target.value, text: e.text});
+        if (event.target.value == '') {
+            setConcesionario({ value: '', text: '' });
+        } else {
+            for (let e of transportCompanyItems) {
+                if (e.value == event.target.value) {
+                    setTransportCompany({ value: event.target.value, text: e.text });
+                    setTransportCompany({ value: event.target.value, text: e.text });
                     break
                 }
             }
         }
-        //setTransportCompany(event.target.value);
 
-        //let dataR = await getRoutes(event.target.value)
-
-        /*let dR: any[] = []
-        if(dataR != undefined){
-            dR = dataR.data!;
-            console.log(dR);
-            setConcesionarioItems(dR);
-        }  
-
-        */
-
-        setConcesionario({value: '',text: ''})
-
-        let concesionaries: ConcesionaryItem[] = [
-            { value: "178575", text: "concesionario 1" },
-            { value: "78578572", text: "concesionario 2" },
-            { value: "27575", text: "concesionario 3" },
-            { value: "4578875", text: "concesionario 4" }
-        ]
-
-        if (concesionarioItems.length == 0) setConcesionarioItems(concesionaries)
-        else {
-            concesionaries = [...concesionarioItems, { value: "200" + concesionarioItems.length, text: "concesionario " + concesionarioItems.length }]
-            setConcesionarioItems(concesionaries)
-        }
-
-        console.log(concesionarioItems)
+        setConcesionario({ value: '', text: '' })
 
     }
 
     const handleChangedConcecionary = (event: SelectChangeEvent) => {
-        if(event.target.value == ''){
-            setConcesionario({value: '', text: ''});
-        }else{
-            for( let e of concesionarioItems){
-                if(e.value == event.target.value){
-                    setConcesionario({value: event.target.value, text: e.text});
+        if (event.target.value == '') {
+            setConcesionario({ value: '', text: '' });
+        } else {
+            for (let e of concesionarioItems) {
+                if (e.value == event.target.value) {
+                    setConcesionario({ value: event.target.value, text: e.text });
                     return
                 }
             }
         }
-    
+
+    }
+
+    const updateConcesionaries = () => {
+        dataProvider.getConcesionary('routes', { id: transportCompany.value })
+            .then(({ data }: any) => {
+                setConcesionarioItems(data)
+                setConcesionarioItems(data)
+                //setLoading(false);
+                console.log(data);
+            })
+            .catch((error: any) => {
+                //setError(error);
+                console.log(error)
+                //setLoading(false);
+            })
     }
 
     const handleClickSetTransportCompany = () => {
-        if(transportCompany.value == ''){
+        if (transportCompany.value == '') {
             notify('Seleccione empresa por favor', {
                 type: 'info',
                 messageArgs: { smart_count: 1 },
@@ -210,27 +200,24 @@ export default function OperatorForm(props: OperatorFormProps) {
             undoable: false,
         });
 
-
+        updateConcesionaries()
     }
-    console.log(props.transportCompanyRegistered)
-
-
 
     return (
         <>
 
             {props.transportCompanyRegistered ? (
                 <>
-                    <Typography variant="h6" component="h5" sx={{marginY: 2}}>
+                    <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
                         Empresa: {transportCompany.text}
                     </Typography>
 
                     <Typography variant="subtitle1" component="h2">
-                        Seleccione concesionarios:
+                        Seleccione rutas:
                     </Typography>
                     <Box display='flex' >
                         <Box sx={{ flex: '1 1 auto' }}>
-                            <CustomSelect items={concesionarioItems} label="Concesionario" value={concesionario.value} handleChange={handleChangedConcecionary} />
+                            <CustomSelect items={concesionarioItems} label="Ruta" value={concesionario.value} handleChange={handleChangedConcecionary} />
                         </Box>
 
                         <IconButton size="large" onClick={() => addData(concesionario)}>
@@ -238,7 +225,7 @@ export default function OperatorForm(props: OperatorFormProps) {
                         </IconButton>
                     </Box>
                     <Typography variant="subtitle1" component="h2">
-                        Concesionarios Selecionados:
+                        Rutas Selecionadas:
                     </Typography>
                     <List>
                         {props.currentData.map(id => (
@@ -251,7 +238,17 @@ export default function OperatorForm(props: OperatorFormProps) {
                                     </ListItem>
 
                                 </Box>
-                                <IconButton size="large" onClick={() => deleteData(id)}>
+                                <IconButton
+                                    size="large"
+                                    onClick={ () => {
+                                        notify('Función no implementada', {
+                                            type: 'info',
+                                            messageArgs: { smart_count: 1 },
+                                            undoable: false,
+                                        });
+                                    }
+                                        /*() => deleteData(id)*/}
+                                >
                                     <Delete sx={{ color: 'red' }} fontSize="inherit" />
                                 </IconButton>
                             </Box>

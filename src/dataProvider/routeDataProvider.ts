@@ -11,6 +11,44 @@ const httpClient = fetchUtils.fetchJson;
 
 
 export const routeDataProvider =  {
+    searchVehicle: (resource: string, props: any) => {
+        resource = "vehicle/search"
+
+        const url = `${apiUrl}/${resource}?plate=${props.key}`;
+
+        const { headers } = useHeaderWithToken()
+
+
+        return httpClient(url, {headers: headers}).then(({ json, status }) => {
+
+            let newOBJ: any[] = []
+
+            for(let i of json){
+                newOBJ = [...newOBJ, {label: i.text, value: i.value}]
+            }
+
+            return {
+                data: newOBJ,
+                status: status
+            }
+        });
+    },
+    getVehicle: (resource: string, props: any) => {
+        resource = "vehicle/dropdown"
+
+        const url = `${apiUrl}/${resource}?transportCompany=${props.id}`;
+
+        const { headers } = useHeaderWithToken()
+
+
+        return httpClient(url, {headers: headers}).then(({ json, status }) => {
+
+            return {
+                data: json,
+                status: status
+            }
+        });
+    },
     getTransportCompany: (resource: string) => {
         resource = "transport-company/dropdown"
 
@@ -32,19 +70,57 @@ export const routeDataProvider =  {
             }
         });
     },
-    getConcesionary: (resource: string, num: any) => {
-        resource = "/concession/dropdown"
+    getConcesionary: (resource: string, props: any) => {
+        resource = "concession/dropdown"
 
-        const url = `${apiUrl}/${resource}?transportCompany=45`;
+        const url = `${apiUrl}/${resource}?transportCompany=${props.id}`;
 
         const { headers } = useHeaderWithToken()
 
 
-        return httpClient(url, {headers: headers}).then(({ json }) => {
+        return httpClient(url, {headers: headers}).then(({ json, status }) => {
 
             return {
                 data: json,
-                total: json.length
+                status: status
+            }
+        });
+    },
+    registerUserInConcesionary: (resource: string, params: any) => {
+
+        resource = 'concession/operator/register';
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+            headers: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
+        });
+    },
+    registerUserInVehicle: (resource: string, params: any) => {
+
+        resource = 'vehicle/driver/register';
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+            headers: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
             }
         });
     },

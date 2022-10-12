@@ -64,7 +64,7 @@ export function FormikStepper({ children, ...props }: FormikConfig<FormikValues>
                     </Stepper>
                     {currentChild}
                     <Grid container spacing={2} paddingBottom={4}>
-                        {step > 0 ? (
+                        {(step > 0 && step !=2) ? (
                             <Grid item>
                                 <Button
                                     variant="contained"
