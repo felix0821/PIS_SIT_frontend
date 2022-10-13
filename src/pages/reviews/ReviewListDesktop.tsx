@@ -31,7 +31,7 @@ const ReviewsBulkActionButtons = () => (
 
 const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
     <Datagrid
-        //rowClick="edit"
+        rowClick="show"
         rowStyle={rowStyle(selectedRow)}
         optimized
         //bulkActionButtons={<ReviewsBulkActionButtons />}
@@ -50,8 +50,9 @@ const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
             },
         }}
     >
+        <TextField source="index" label="" />
         <TextField source="routeName" label="Nombre de ruta" />
-        <StarRatingField size="small" label="Calififcación" />
+        
         <StarRatingField2 size="small" label="Calififcación" />
         <Temporal label="Comentario"></Temporal>
         <DateField source='time' label="Fecha y Hora" />
