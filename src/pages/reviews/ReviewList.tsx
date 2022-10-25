@@ -15,7 +15,7 @@ const ReviewList = () => {
     );
     const location = useLocation();
     const navigate = useNavigate();
-
+     
     const handleClose = useCallback(() => {
         navigate('/reviews');
     }, [navigate]);

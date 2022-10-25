@@ -7,6 +7,7 @@
         "@mui/icons-material": "^5.0.1",
         "@mui/material": "^5.0.2",
         "@mui/x-date-pickers": "^5.0.3",
+        "@stomp/stompjs": "^6.1.2",
         "@types/inflection": "^1.5.28",
         "@types/recharts": "^1.8.10",
         "axios": "^0.27.2",
@@ -16,6 +17,9 @@
         "formik-material-ui": "^4.0.0-alpha.2",
         "leaflet": "^1.8.0",
         "leaflet-routing-machine": "^3.2.12",
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.38",
+        "net": "^1.0.2",
         "prop-types": "^15.6.1",
         "proxy-polyfill": "^0.3.0",
         "query-string": "^7.1.1",
@@ -29,7 +33,10 @@
         "react-leaflet": "^3.2.5",
         "react-router": "^6.1.0",
         "react-router-dom": "^6.1.0",
-        "react-scripts": "^5.0.0",
+        "react-scripts": "^5.0.1",
+        "sockjs-client": "^1.6.1",
+        "stompjs": "^2.3.3",
+        "websocket": "^1.0.34",
         "yup": "^0.32.11"
     },
     "scripts": {
@@ -54,6 +61,8 @@
         "@types/react": "^17.0.20",
         "@types/react-datepicker": "^4.4.2",
         "@types/react-dom": "^17.0.9",
+        "@types/sockjs-client": "^1.5.1",
+        "@types/stompjs": "^2.3.5",
         "rewire": "^5.0.0",
         "source-map-explorer": "^2.0.0",
         "typescript": "^4.4.0"
