@@ -6,17 +6,66 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import WorkIcon from '@mui/icons-material/Work';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import ReportIcon from '@mui/icons-material/Report';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ListItemButton from '@mui/material/ListItemButton';
+import ButtonGroup from '@mui/material/ButtonGroup';
+
 import Stack from '@mui/material/Stack';
+import moment from 'moment';
+import {over} from 'stompjs';
+import SockJS from 'sockjs-client';
 import { Badge, Icon, IconButton } from '@mui/material';
+
+
+var stompClient:any =null;
 
 export default function AlertsMenu() {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
-
-    const [cantAlerts, setCantAlerts] = React.useState(4)
+    var notificationCount = 0;
+    const [messages, setMessages] = React.useState<any[]>([]);
+    const [cantAlerts, setCantAlerts] = React.useState(notificationCount)
     const [alerts, setAlerts] = React.useState<any[]>([])
 
+    React.useEffect(() => {
+      connect()
+    }, []);
+
+    // WebSocket
+    const connect =()=>{
+    let Sock = new SockJS('https://sit-backend.herokuapp.com/ws');
+    stompClient = over(Sock);
+    stompClient.connect({},onConnected, onError);
+    }
+    const onConnected = () => {
+            stompClient.subscribe('/route/'+'55569'+'/private', onPrivateMessage);
+            //userJoin();
+    }
+    const onPrivateMessage = (payload:any)=>{
+            console.log(payload);
+            var payloadData = JSON.parse(payload.body);
+            setMessages([...messages,payloadData]);
+            setCantAlerts(cantAlerts+1);
+    }
+    const onError = (err:any) => {
+           console.log(err);      
+    }
+
+    // Management Alert
+
     const handleToggle = () => {
+        notificationCount = 3;
         setOpen((prevOpen) => !prevOpen);
     };
 
@@ -27,7 +76,6 @@ export default function AlertsMenu() {
         ) {
             return;
         }
-
         setOpen(false);
     };
 
@@ -35,6 +83,7 @@ export default function AlertsMenu() {
         if (event.key === 'Tab') {
             event.preventDefault();
             setOpen(false);
+            
         } else if (event.key === 'Escape') {
             setOpen(false);
         }
@@ -46,7 +95,9 @@ export default function AlertsMenu() {
         if (prevOpen.current === true && open === false) {
             anchorRef.current!.focus();
         }
-
+        if(open === true) {
+            setCantAlerts(0);
+        }
         prevOpen.current = open;
     }, [open]);
 
@@ -82,20 +133,63 @@ export default function AlertsMenu() {
                                     placement === 'bottom-start' ? 'left top' : 'left bottom',
                             }}
                         >
-                            <Paper>
+                            <Paper sx={{ width: 320, maxWidth: '100%', bgcolor: 'background.paper' }}>
                                 <ClickAwayListener onClickAway={handleClose}>
-                                    <MenuList
-                                        autoFocusItem={open}
-                                        id="composition-menu"
+                                    <List 
                                         aria-labelledby="composition-button"
+                                        id="composition-menu"
                                         onKeyDown={handleListKeyDown}
                                     >
-                                        {/*Aqui se iteran los elementos */}
-                                        <MenuItem onClick={handleClose}>Alerta 1.......................</MenuItem>
-                                        <MenuItem onClick={handleClose}>Alerta 2</MenuItem>
-                                        <MenuItem onClick={handleClose}>Alerta 3</MenuItem>
-
-                                    </MenuList>
+                                    {messages.map((i:any)=>(
+                                        <ListItem
+                                            key={i.sessionId} 
+                                            secondaryAction={
+                                                <ButtonGroup
+                                                    orientation="vertical"
+                                                >
+                                                    <IconButton 
+                                                        edge="end"
+                                                        aria-label="comment"
+                                                    >
+                                                        <CheckCircleIcon />
+                                                    </IconButton>
+                                                    <IconButton 
+                                                        edge="end"
+                                                        aria-label="comment"
+                                                    >
+                                                        <ReportIcon />
+                                                    </IconButton>
+                                                </ButtonGroup>
+                                            }
+                                            disablePadding
+                                        >
+                                            <ListItemButton onClick={handleClose}>
+                                                <ListItemAvatar>
+                                                    <Avatar>
+                                                        <WorkIcon />
+                                                    </Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={"Ruta "+i.gizRoute}
+                                                    secondary={
+                                                        <React.Fragment>
+                                                            <Typography
+                                                                sx={{ display: 'inline' }}
+                                                                component="span"
+                                                                variant="body2"
+                                                                color="text.primary"
+                                                            >
+                                                                {" "} 
+                                                            </Typography>
+                                                            {"Momento ("+moment(i.sessionTimestamp).format('LLLL')+")"+
+                                                            new Date(i.sessionTimestamp).getUTCHours()}
+                                                        </React.Fragment>
+                                                    }
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    ))}
+                                    </List>
                                 </ClickAwayListener>
                             </Paper>
                         </Grow>

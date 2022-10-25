@@ -30,7 +30,7 @@ export const reviewDataProvider =  {
         return httpClient(url, {headers: headers}).then(({ json }) => {
             return {
                 data: json.allItems,
-                total: json.elements
+                total: json.elements 
             }
         });
 
