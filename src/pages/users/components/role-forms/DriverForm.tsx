@@ -3,7 +3,7 @@ import { Box, Button, IconButton, List, ListItem, ListItemText, SelectChangeEven
 import React, { useEffect, useState } from 'react'
 import { useDataProvider, useNotify } from 'react-admin';
 import CustomSelect from '../CustomSelect'
-import SelectVehicleAutocomplete from './components/SelectVehicleAutocomplete';
+import SelectVehicleAutocomplete from './SelectVehicleAutocomplete';
 
 interface DriverFormProps {
     setDriverTransportCompanyRegistered: (newOp: any) => any

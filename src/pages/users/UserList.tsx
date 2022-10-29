@@ -22,7 +22,8 @@ import {
 } from 'react-admin';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 import UserListDesktop from './UserListDesktop';
-import CustomCreateButton from './CustomCreateButton';
+import CustomCreateButton from './components/CustomCreateButton';
+import UserListMobile from './UserListMobile';
 
 
 const UserList = () => {
@@ -50,7 +51,15 @@ const UserList = () => {
                 perPage={10}
                 //sort={{ field: 'date', order: 'DESC' }}
             >
-                <UserListDesktop />
+                
+
+                {isXSmall ? (
+                    <UserListMobile />
+                ) : (
+                    <UserListDesktop />
+                )}
+
+
             </List>
            
         </Box>

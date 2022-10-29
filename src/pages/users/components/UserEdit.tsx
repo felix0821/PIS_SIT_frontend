@@ -1,20 +1,16 @@
-import * as React from 'react';
 import {
     EditBase,
     useTranslate,
     TextInput,
     SimpleForm,
-    DateField,
     EditProps,
     DateInput
 } from 'react-admin';
-import { Box, Grid, Stack, IconButton, Typography, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Stack, IconButton, Typography, useTheme, useMediaQuery } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-//import StarRatingField from './StarRatingField';
-import { Review, User } from '../../types';
+import { User } from '../../../types';
 import UserEditToolbar from './UserEditToolbar';
-import DatePickerField from './DatePickerField';
 
 
 const style = {

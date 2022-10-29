@@ -8,6 +8,7 @@ import { dataProvider } from './dataProvider';
 import users from './pages/users';
 import routes from './pages/routes';
 import reviews from './pages/reviews';
+import vehicles from './pages/units';
 import { Dashboard } from './pages/dashboard';
 
 
@@ -28,7 +29,7 @@ const App = () => {
         >
             <Resource name="users" {...users} />
             <Resource name="alerts" list={ListGuesser} />
-            <Resource name="units" list={ListGuesser} />
+            <Resource name="units" {...vehicles} />
             <Resource name="reviews" {...reviews} />
             <Resource name="routes" {...routes} />
         </Admin>

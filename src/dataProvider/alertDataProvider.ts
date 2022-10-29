@@ -31,6 +31,25 @@ export const alertDataProvider =  {
         });
     },
 
+    getNotifications: (resource: string, params: any) => {
+
+
+        resource = "notification"
+
+        const url = `${apiUrl}/${resource}`;
+
+        const { headers } = useHeaderWithToken()
+
+
+        return httpClient(url, {headers: headers}).then(({ json }) => {
+
+            return {
+                data: json,
+                total: json.length
+            }
+        });
+    },
+
     getOne: (resource: string, params: any) => {
         if (resource == "users") resource = "person/update";
 

@@ -9,9 +9,6 @@ import {
     Card,
     CardActions,
     CircularProgress,
-    Theme,
-    Typography,
-    useMediaQuery,
 } from '@mui/material';
 import {
     Form,
@@ -19,13 +16,12 @@ import {
     TextInput,
     useTranslate,
     useLogin,
-    useNotify,
-    useTheme
+    useNotify
 } from 'react-admin';
 
 import Box from '@mui/material/Box';
 
-const Login = () => {
+const Login2 = () => {
     const [loading, setLoading] = useState(false);
     const translate = useTranslate();
 
@@ -44,8 +40,8 @@ const Login = () => {
                 typeof error === 'string'
                     ? error
                     : typeof error === 'undefined' || !error.message
-                        ? 'ra.auth.sign_in_error'
-                        : error.message,
+                    ? 'ra.auth.sign_in_error'
+                    : error.message,
                 {
                     type: 'warning',
                     messageArgs: {
@@ -53,66 +49,39 @@ const Login = () => {
                             typeof error === 'string'
                                 ? error
                                 : error && error.message
-                                    ? error.message
-                                    : undefined,
+                                ? error.message
+                                : undefined,
                     },
                 }
             );
         });
     };
 
-    const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-
     return (
         <Form onSubmit={handleSubmit} noValidate>
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: mdDown ? 'column' : 'row',
+                    flexDirection: 'column',
                     minHeight: '100vh',
                     alignItems: 'center',
-                    justifyContent: mdDown ? 'flex-start' : 'space-evenly',
-                    gap: 4
+                    justifyContent: 'flex-start',
                 }}
             >
-                {!mdDown && (
-
-                    <Box display='flex' justifyContent='center' maxWidth={600}>
-                        <Box
-
-                            component="img"
-                            sx={{
-                                maxWidth: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                            }}
-                            alt="SIT Logo"
-                            src={logo}
-                        >
-                        </Box>
-
+                <Card sx={{ minWidth: 300, marginTop: '1em' }}>
+                    <Box
+                        component="img"
+                        sx={{
+                            maxHeight: { xs: 167, md: 525 },
+                            maxWidth: { xs: 317, md: 850 },
+                            margin: '1em',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                        alt="SIT Logo"
+                        src= {logo}
+                    >
                     </Box>
-                )}
-
-
-                <Card sx={{ minWidth: mdDown ? 300 : 400, marginTop: '1em'}}>
-                    {mdDown ? (
-                        <Box
-                            component="img"
-                            sx={{
-                                maxHeight: { xs: 167 },
-                                maxWidth: { xs: 317 },
-                                margin: '1em',
-                                display: 'flex',
-                                justifyContent: 'center',
-                            }}
-                            alt="SIT Logo"
-                            src={logo}
-                        >
-                        </Box>
-                    ) : (
-                        <Typography variant='h3' display='flex' justifyContent='center' marginY={2}>Iniciar sesión</Typography>
-                    )}
                     <Box sx={{ padding: '0 1em 1em 1em' }}>
                         <Box sx={{ marginTop: '1em' }}>
                             <TextInput
@@ -141,7 +110,7 @@ const Login = () => {
                             type="submit"
                             disabled={loading}
                             fullWidth
-                            sx={{ color: '#fff' }}
+                            sx= {{color: '#fff'}}
                         >
                             {loading && (
                                 <CircularProgress size={25} thickness={2} />
@@ -155,12 +124,12 @@ const Login = () => {
     );
 };
 
-Login.propTypes = {
+Login2.propTypes = {
     authProvider: PropTypes.func,
     previousRoute: PropTypes.string,
 };
 
-export default Login;
+export default Login2;
 
 interface FormValues {
     username?: string;

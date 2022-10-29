@@ -125,7 +125,7 @@ export const routeDataProvider =  {
         });
     },
     getList: (resource: string, params: any) => {
-        resource == "role/dropdown"
+        resource = "vehicle/dropdown?transportCompany=3"
 
         const url = `${apiUrl}/${resource}`;
 
@@ -133,6 +133,10 @@ export const routeDataProvider =  {
 
 
         return httpClient(url, {headers: headers}).then(({ json }) => {
+            
+            for(let i=0; i<json.length;++i){
+                json[i].id = json[i].value
+            }
 
             return {
                 data: json,

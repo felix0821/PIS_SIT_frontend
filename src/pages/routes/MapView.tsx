@@ -34,11 +34,6 @@ export default function MapView(props: any) {
     const { lat, lng, zoom } = ubication;
     const position = new LatLng(lat, lng);
 
-
-    // Start-End point for the routing machine
-    //const [start, setStart] = useState<LatLng>(new LatLng(38.9072, -77.0369));
-    //const [end, setEnd] = useState<LatLng>(new LatLng(37.7749, -122.4194));
-
     const start = props.start;
     const setStart = props.setStart;
     const end = props.end;
@@ -64,10 +59,10 @@ export default function MapView(props: any) {
                 waypoints: [start, end],
                 plan: new L.Routing.Plan([start, end],
                     {
-                        createMarker: function(i, wp) {
-                          return L.marker(wp.latLng, {
-                            draggable: false
-                          });
+                        createMarker: function (i, wp) {
+                            return L.marker(wp.latLng, {
+                                draggable: false
+                            });
                         }
                     }),
                 addWaypoints: false,
@@ -83,35 +78,35 @@ export default function MapView(props: any) {
         if (routingMachine) {
             routingMachine.addTo(map)
             routingMachine.setWaypoints([start, end])
-            
+
         }
     }, [routingMachine, start, end])
 
     const handleClick = () => {
         if (start.lat === 38.9072) {
-          setStart(new LatLng(40.7128, -74.0060))
-          setEnd(new LatLng(47.6062, -122.3321))
+            setStart(new LatLng(-16.4141, -71.5433))
+            setEnd(new LatLng(-16.4184, -71.4950))
         }
         if (start.lat === 40.7128) {
-          setStart(new LatLng(38.9072, -77.0369))
-          setEnd(new LatLng(37.7749, -122.4194))
+            setStart(new LatLng(-16.4141, -71.5433))
+            setEnd(new LatLng(-16.4184, -71.4950))
         }
-      }
-    
+    }
+
 
     return (
         <>
-        <MapContainer
-            center={position}
-            zoom={zoom}
-            style={{ height: "60vh", width: "60%", padding: 0 }}
-            whenCreated={(map: any) => setMap(map)}>
+            <MapContainer
+                center={position}
+                zoom={zoom}
+                style={{ height: "60vh", width: "60%", padding: 0 }}
+                whenCreated={(map: any) => setMap(map)}>
 
-            <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url={maps.base}
-                    />
-        </MapContainer>
+                <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url={maps.base}
+                />
+            </MapContainer>
         </>
     )
 }
