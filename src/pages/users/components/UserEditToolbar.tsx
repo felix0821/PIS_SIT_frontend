@@ -13,7 +13,7 @@ import {
 } from 'react-admin';
 import AcceptButton from './AcceptButton';
 import RejectButton from './RejectButton';
-import { User } from '../../types';
+import { User } from '../../../types';
 interface Props extends ToolbarProps {
     onFinish: () => void;
 }
@@ -38,12 +38,12 @@ const UserEditToolbar = ({ onFinish, ...props }: Props) => {
             }}
         >
             {record.status === 'pending' ? (
-                <Fragment>
+                <>
                     <AcceptButton />
                     <RejectButton />
-                </Fragment>
+                </>
             ) : (
-                <Fragment>
+                <>
                     <SaveButton
                         mutationOptions={{
                             onSuccess: (data, vars, g) => {
@@ -61,7 +61,7 @@ const UserEditToolbar = ({ onFinish, ...props }: Props) => {
                         sx={{marginBottom: 4}}
                     />
                     <DeleteWithConfirmButton record={record} resource={resource} sx={{marginBottom: 4}}/>
-                </Fragment>
+                </>
             )}
         </Toolbar>
     );

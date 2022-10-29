@@ -1,20 +1,7 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
-import * as React from 'react';
 import {
-    Identifier,
-    Datagrid,
-    TextField,
-    BulkDeleteButton,
-    EditButton,
-    DeleteWithConfirmButton,
+    Datagrid, DeleteWithConfirmButton, Identifier, TextField
 } from 'react-admin';
-import CustomEditButton from './CustomEditButton';
-
-import rowStyle from './rowStyle';
-
-//import BulkAcceptButton from './BulkAcceptButton';
-//import BulkRejectButton from './BulkRejectButton';
-import { FunctionField } from 'react-admin';
+import CustomEditButton from './components/CustomEditButton';
 
 export interface UserListDesktopProps {
     selectedRow?: Identifier;
@@ -36,15 +23,8 @@ const UserListDesktop = ({ selectedRow }: UserListDesktopProps) => (
                 whiteSpace: 'nowrap',
             },
         }}
+        bulkActionButtons={false}
     >
-        {/*<FunctionField label="Nombre y Apellidos"
-            render={
-                (record: {
-                    name: string;
-                    lastnameFather: string;
-                    lastnameMother: string
-                }
-            ) => `${record.name}, ${record.lastnameFather} ${record.lastnameMother}`} />*/}
         <TextField source="name" label="Nombres" />
         <TextField source="lastnameFather" label="Apellido Paterno" />
         <TextField source="lastnameMother" label="Apellido Materno" />

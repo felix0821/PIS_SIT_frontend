@@ -1,5 +1,5 @@
 import PeopleIcon from '@mui/icons-material/People';
-import UserEdit from './UserEdit';
+import UserEdit from './components/UserEdit';
 import UserList from './UserList';
 
 export default {

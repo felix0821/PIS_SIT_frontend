@@ -22,6 +22,8 @@ export const dataProvider = combineDataProviders((resource) => {
             return alertDataProvider
         case 'routes':
             return routeDataProvider
+        case 'units':
+            return routeDataProvider
         default:
             throw new Error(`Unknown resource: ${resource}`);
     }

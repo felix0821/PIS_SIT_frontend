@@ -9,7 +9,6 @@ import {
     useRedirect,
     useRecordContext,
 } from 'react-admin';
-import { Review } from '../../types';
 
 /**
  * This custom button demonstrate using a custom action to update data
@@ -18,10 +17,10 @@ const RejectButton = () => {
     const translate = useTranslate();
     const notify = useNotify();
     const redirectTo = useRedirect();
-    const record = useRecordContext<Review>();
+    const record = useRecordContext();
 
     const [reject, { isLoading }] = useUpdate(
-        'reviews',
+        'users',
         { id: record.id, data: { status: 'rejected' }, previousData: record },
         {
             mutationMode: 'undoable',

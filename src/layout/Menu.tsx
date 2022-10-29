@@ -14,14 +14,14 @@ import {
 
 
 import alerts from '../pages/alerts';
-import units from '../units';
+import units from '../pages/units';
 import users from '.././pages/users';
 import routes from '.././pages/routes';
 import reviews from '.././pages/reviews';
 
 import SubMenu from './SubMenu';
 
-type MenuName =  'menuSit';
+type MenuName = 'menuSit';
 
 const Menu = ({ dense = false }: MenuProps) => {
     const [state, setState] = useState({
@@ -47,7 +47,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                     }),
             }}
         >
-            <DashboardMenuItem/>
+            <DashboardMenuItem />
             <MenuItemLink
                 to="/users"
                 state={{ _scrollToTop: true }}
@@ -57,7 +57,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                 leftIcon={<users.icon />}
                 dense={dense}
             />
-                        <MenuItemLink
+            <MenuItemLink
                 to="/alerts"
                 state={{ _scrollToTop: true }}
                 primaryText={translate(`Alertas`, {
@@ -79,7 +79,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                 handleToggle={() => handleToggle('menuSit')}
                 isOpen={state.menuSit}
                 name="Gestion SIT"
-                icon= {<ManageAccountsIcon /> }
+                icon={<ManageAccountsIcon />}
                 dense={dense}
             >
                 <MenuItemLink

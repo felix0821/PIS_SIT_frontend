@@ -21,6 +21,26 @@ export interface Person extends RaRecord {
     dateBirth: String
 }
 
+export interface Role extends RaRecord {
+    id: string,
+    name: string
+} 
+
+export interface AlertNotification extends RaRecord {
+    id: string,
+    image?: null | string,
+    title?: string,
+    type?: string,
+    specification?: string,
+    timestamp?: string
+}
+
+export interface Vehicle extends RaRecord {
+    id: string,
+    value: string,
+    text: string,
+} 
+
 
 
 
