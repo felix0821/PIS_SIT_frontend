@@ -19,7 +19,7 @@ export const useAlertNotificationWebSocket = () => {
     }
     const onConnected = () => {
         //stompClient.subscribe('/route/' + '55580' + '/private', onPrivateMessage);
-        stompClient.subscribe('/route/' + '55586' + '/private', onPrivateMessage);
+        stompClient.subscribe('/user/' + 'admin@sit.com' + '/web/notification', onPrivateMessage);
         //stompClient.subscribe('/private', onPrivateMessage);
     };
     let onPrivateMessage = (payload: any) => {
