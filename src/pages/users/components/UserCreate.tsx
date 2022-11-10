@@ -1,28 +1,16 @@
-import * as React from 'react';
-import { Create, required, CreateProps, email, minLength, maxLength, useDataProvider, Loading, Error, useNotify, useListContext, SelectField } from 'react-admin';
-import { Box, CardHeader, CardContent, Button, Stepper, Step, StepLabel, Grid, CircularProgress, useMediaQuery, useTheme, IconButton, Typography } from '@mui/material';
-import { Person } from '../../types';
-import { Field, Form, Formik, FormikConfig, FormikValues } from 'formik';
-import { TextField, Select } from 'formik-material-ui';
-
-import axios from 'axios';
-import "./formik.css"
-
-//import { ProductEditDetails } from './ProductEditDetails';
-import { useState, useEffect } from 'react';
+import { Box, CardContent, CircularProgress, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Field, FormikValues } from 'formik';
+import { Select, TextField } from 'formik-material-ui';
+import { CreateProps, useDataProvider, useListContext, useNotify } from 'react-admin';
+import { Person, Role } from '../../../types';
+import { useEffect, useState } from 'react';
 import { object, string } from 'yup';
-
-//
-import { fetchUtils } from 'react-admin';
+import { Close } from '@mui/icons-material';
 import MenuItem from '@mui/material/MenuItem';
-import { Close, Height } from '@mui/icons-material';
-
-import DatePickerField from './DatePickerField'
-import { FormikStep, FormikStepper } from './FormikStepper';
-import { useHeaderWithToken } from '../../custom-hooks';
+import DatePickerField from './DatePickerField';
+import { FormikStep, FormikStepper } from './form-stepper/FormikStepper';
 import { UserSelectRoleForm } from './UserSelectRoleForm';
-const apiUrl = 'https://sit-backend.herokuapp.com';
-const httpClient = fetchUtils.fetchJson;
+import "./formik.css";
 
 interface Props extends CreateProps<Person> {
     onCancel: () => void;
@@ -90,36 +78,25 @@ const styleTablet = {
     },
 };
 
-
 const UserCreate = ({ onCancel, ...props }: Props) => {
-    interface LabeledValue {
-        status: number;
-        headers: Headers;
-        body: string;
-        json: any;
-    }
 
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
     const notify = useNotify();
-
     const dataProvider = useDataProvider();
-    const [roles, setRoles] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState();
-
-    const [documents, setDocuments] = useState<any[]>([]);
-
     const { refetch } = useListContext()
+
+    const [loading, setLoading] = useState(true);
+
+    const [roles, setRoles] = useState<any[]>([]);
+    const [documents, setDocuments] = useState<any[]>([]);
 
     const [currentUserId, setCurrentUserId] = useState('')
     const [disableFieldBirth, setDisableFieldBirth] = useState(false)
 
-    //const [isRoleSelected, setIsRoleSelected] = useState(false)
-    const [roleIdSelected, setRoleIdSelected] = useState('')
-    const [roleNameSelected, setRoleNameSelected] = useState('')
+    const [roleSelected, setRoleSelected] = useState<Role>({id: '', name: ''});
     const [changueForm, setChangueForm] = useState(false)
     const [activeSelectRole, setActiveSelectRole] = useState(false)
 
@@ -131,11 +108,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                /*console.log("status: " + error.status)
-                console.log("message: " + error.message)
-                console.log("body: " + error.body.content)*/
-                setError(error)
-                setLoading(false);
                 notify('Error ' + error.status + ': ' + error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
@@ -153,6 +125,8 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     }
 
     const step2Handle = async (values: FormikValues) => {
+
+        setDisableFieldBirth(true);
         //retorna si documento está disponible
         let documentId = values.personIdentification.documentId
         let value = values.personIdentification.identificationValue
@@ -161,8 +135,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                setError(error)
-                setLoading(false);
                 notify('Error ' + error.status + ': ' + error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
@@ -173,9 +145,11 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                     message: error.body.content
                 }
             })
-        if (!(res.status == 200)) return false
+        if (!(res.status == 200)) {
+            setDisableFieldBirth(false);
+            return false;
+        }
 
-        let resp = true
         setDisableFieldBirth(true)
 
         let createUserRes = await dataProvider.registerUser('users', { data: values })
@@ -188,8 +162,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                setError(error)
-                setLoading(false);
                 notify('Error ' + error.status + ': ' + error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
@@ -208,31 +180,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         return true
     }
 
-    const step3Handle = async (values: FormikValues) => {
-
-        let res = await dataProvider.verifyEmail('users', email)
-            .then(({ data }: any) => {
-                return data
-            })
-            .catch((error: any) => {
-                setError(error)
-                setLoading(false);
-                notify('Error ' + error.status + ': ' + error.body.content, {
-                    type: 'warning',
-                    messageArgs: { smart_count: 1 },
-                    undoable: false,
-                });
-                return {
-                    status: error.status,
-                    message: error.body.content
-                }
-            })
-        console.log(JSON.stringify(res))
-        let resp = (res.status == 200)
-
-        return resp
-    }
-
     /*const handleChangeRole = (roleId: any) => {
         console.log("prueba: "+roleId)
         setRoleIdSelected(roleId);
@@ -245,7 +192,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     }*/
 
     const setRoleInUser = async (userId: any, roleId: any) => {
-        let createUserInRole = await dataProvider.registerUserInRole('users', { data: {userId: userId, roleId: roleId} })
+        let createUserInRole = await dataProvider.registerUserInRole('users', { data: { userId: userId, roleId: roleId } })
             .then(({ data }: any) => {
                 notify('Code ' + data.status + ': ' + 'Rol asignado ' + data.message, {
                     type: 'success',
@@ -255,8 +202,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                //setError(error)
-                //setLoading(false);
                 notify('Error ' + error.status + ': ' + error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
@@ -271,32 +216,22 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         return false
     }
 
-
     useEffect(() => {
-
 
         dataProvider.getAll('roles')
             .then(({ data }: any) => {
                 setRoles(data);
-                setLoading(false);
-                //console.log(roles)
-
             })
             .catch((error: any) => {
-                setError(error);
-                setLoading(false);
             })
 
         dataProvider.getAll('documents')
             .then(({ data }: any) => {
                 setDocuments(data);
-                setLoading(false);
-
             })
             .catch((error: any) => {
-                setError(error);
-                setLoading(false);
             })
+        setLoading(false);
     }, [])
 
     if (loading) return <Box sx={smDown ? styleMobile : mdDown ? styleTablet : style}
@@ -309,8 +244,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         </Box>
     </Box>
     if (!roles) return null;
-
-
 
     return (
 
@@ -363,7 +296,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                     const response = await debouncedApi(email);
                                     return response;
                                   })*/
-
                                 .required('No puedes dejar este campo en blanco!')
                         })}
                         onNext={async (values: FormikValues) => {
@@ -375,6 +307,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                             <Field fullWidth type="email" name="username" component={TextField} label="Correo Electrónico" />
                         </Box>
                     </FormikStep>
+
                     <FormikStep
                         label="Datos Personales"
                         validationSchema={object({
@@ -406,7 +339,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                     <Field fullWidth type="text" name="lastnameMother" component={TextField} label="Apellido Materno" />
                                 </Box>
                                 <Box paddingBottom={2}>
-                                    <DatePickerField name="dateBirth" label="Fecha de Nacimiento" disable={disableFieldBirth}/>
+                                    <DatePickerField name="dateBirth" label="Fecha de Nacimiento" disable={disableFieldBirth} />
                                 </Box>
                             </Box>
 
@@ -427,18 +360,16 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                 <Box paddingBottom={2}>
                                     <Field fullWidth type="text" name="personIdentification.identificationValue" component={TextField} label="Numero de Documento de Identidad" />
                                 </Box>
-
                             </Box>
 
                         </Box>
-
                     </FormikStep>
+
                     <FormikStep
                         label="Asignar Rol"
                         validationSchema={object({
                             rol: string().required('No puedes dejar este campo en blanco!').min(1)
                         })}
-
                     >
                         <Box padding={2} >
                             {
@@ -449,23 +380,13 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                         component={Select}
                                         label="Seleccionar Rol"
                                         value=''
-                                        //hidden={false}
-                                        //disabled={activeSelectRole}
                                         onChange={(e: any, { props }: FormikValues) => {
-                                            //console.log(JSON.stringify(props))
                                             if (props.value == '') return
-                                            let result = roles.find(r=> r.value == props.value)
+                                            let result = roles.find(r => r.value == props.value)
 
-                                            if (!setRoleInUser(currentUserId ,props.value)) return
+                                            if (!setRoleInUser(currentUserId, props.value)) return
 
-                                            setRoleIdSelected(props.value)
-                                            setRoleIdSelected(props.value)
-                                            setRoleNameSelected(result.text)
-                                            setRoleNameSelected(result.text)
-                                            //handleChangeRole(props.value)
-                                            //handleChangeRole(props.value)
-                                            
-
+                                            setRoleSelected({id: props.value, name: result.text});
                                             setChangueForm(!changueForm)
                                             setActiveSelectRole(true)
 
@@ -478,18 +399,18 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                     </Field>
                                 ) : (
                                     <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
-                                        Rol seleccionado: {roleNameSelected}
+                                        Rol seleccionado: {roleSelected.name}
                                     </Typography>
                                 )
                             }
 
 
-                            {(changueForm && (roleIdSelected != '')) && (
-                                <UserSelectRoleForm roleId={roleIdSelected} userId={currentUserId}></UserSelectRoleForm>
+                            {(changueForm && (roleSelected.id != '')) && (
+                                <UserSelectRoleForm roleId={roleSelected.id} userId={currentUserId}></UserSelectRoleForm>
                             )}
 
-                            {(!changueForm && (roleIdSelected != '')) && (
-                                <UserSelectRoleForm roleId={roleIdSelected} userId={currentUserId}></UserSelectRoleForm>
+                            {(!changueForm && (roleSelected.id != '')) && (
+                                <UserSelectRoleForm roleId={roleSelected.id} userId={currentUserId}></UserSelectRoleForm>
                             )}
 
                         </Box>
@@ -497,11 +418,8 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 </FormikStepper>
             </CardContent>
         </Box>
-
     );
 };
-
-
 
 export default UserCreate;
 

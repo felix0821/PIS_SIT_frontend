@@ -1,71 +1,56 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
+import { useEffect, useRef, useState } from 'react';
 
-import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import WorkIcon from '@mui/icons-material/Work';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import ReportIcon from '@mui/icons-material/Report';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ListItemButton from '@mui/material/ListItemButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
 
+import { Badge, Icon, IconButton, ThemeProvider } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import moment from 'moment';
-import {over} from 'stompjs';
-import SockJS from 'sockjs-client';
-import { Badge, Icon, IconButton } from '@mui/material';
-
-
-var stompClient:any =null;
+import 'moment-timezone';
+import 'moment/locale/es';
+import { useDataProvider, useNotify } from 'react-admin';
+import { AlertNotification } from '../types';
+import { Notification } from './components/Notification';
+import { useAlertNotificationWebSocket } from '../custom-hooks';
+import React from 'react';
 
 export default function AlertsMenu() {
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLButtonElement>(null);
-    var notificationCount = 0;
-    const [messages, setMessages] = React.useState<any[]>([]);
-    const [cantAlerts, setCantAlerts] = React.useState(notificationCount)
-    const [alerts, setAlerts] = React.useState<any[]>([])
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [notifications, setNotifications] = useState<AlertNotification[]>([]);
+    const [cantAlerts, setCantAlerts] = useState(0)
 
-    React.useEffect(() => {
-      connect()
+    const {connect, newNotifify} = useAlertNotificationWebSocket();
+
+    const dataProvider = useDataProvider();
+    const notify = useNotify();
+
+    useEffect(() => {
+        dataProvider.getNotifications('alerts')
+            .then(({ data }: any) => {
+                setNotifications(data.allItems)
+                //setLoading(false);
+
+            })
+            .catch((error: any) => {
+                //setError(error);
+                console.log('Error ' + error.status + ': ' + error.body.content)
+                //setLoading(false);
+            })
+        connect()
+        
     }, []);
 
-    // WebSocket
-    const connect =()=>{
-    let Sock = new SockJS('https://sit-backend.herokuapp.com/ws');
-    stompClient = over(Sock);
-    stompClient.connect({},onConnected, onError);
-    }
-    const onConnected = () => {
-            stompClient.subscribe('/route/'+'55569'+'/private', onPrivateMessage);
-            //userJoin();
-    }
-    const onPrivateMessage = (payload:any)=>{
-            console.log(payload);
-            var payloadData = JSON.parse(payload.body);
-            setMessages([...messages,payloadData]);
-            setCantAlerts(cantAlerts+1);
-    }
-    const onError = (err:any) => {
-           console.log(err);      
-    }
+    useEffect(()=>{
+        if(newNotifify.id == "") return
+        setNotifications([newNotifify, ...notifications]);
+        setCantAlerts(cantAlerts + 1);
 
-    // Management Alert
+    }, [newNotifify])
 
     const handleToggle = () => {
-        notificationCount = 3;
         setOpen((prevOpen) => !prevOpen);
     };
 
@@ -83,20 +68,19 @@ export default function AlertsMenu() {
         if (event.key === 'Tab') {
             event.preventDefault();
             setOpen(false);
-            
+
         } else if (event.key === 'Escape') {
             setOpen(false);
         }
     }
 
-    // return focus to the button when we transitioned from !open -> open
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
         if (prevOpen.current === true && open === false) {
             anchorRef.current!.focus();
         }
-        if(open === true) {
-            setCantAlerts(0);
+        if (open === true) {
+            //setCantAlerts(0);
         }
         prevOpen.current = open;
     }, [open]);
@@ -133,62 +117,18 @@ export default function AlertsMenu() {
                                     placement === 'bottom-start' ? 'left top' : 'left bottom',
                             }}
                         >
-                            <Paper sx={{ width: 320, maxWidth: '100%', bgcolor: 'background.paper' }}>
+                            <Paper sx={{ width: 320, maxWidth: '100%', bgcolor: 'background.paper', maxHeight: 400, overflow: 'auto'}}>
                                 <ClickAwayListener onClickAway={handleClose}>
-                                    <List 
+                                    <List
                                         aria-labelledby="composition-button"
                                         id="composition-menu"
                                         onKeyDown={handleListKeyDown}
                                     >
-                                    {messages.map((i:any)=>(
-                                        <ListItem
-                                            key={i.sessionId} 
-                                            secondaryAction={
-                                                <ButtonGroup
-                                                    orientation="vertical"
-                                                >
-                                                    <IconButton 
-                                                        edge="end"
-                                                        aria-label="comment"
-                                                    >
-                                                        <CheckCircleIcon />
-                                                    </IconButton>
-                                                    <IconButton 
-                                                        edge="end"
-                                                        aria-label="comment"
-                                                    >
-                                                        <ReportIcon />
-                                                    </IconButton>
-                                                </ButtonGroup>
-                                            }
-                                            disablePadding
-                                        >
-                                            <ListItemButton onClick={handleClose}>
-                                                <ListItemAvatar>
-                                                    <Avatar>
-                                                        <WorkIcon />
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={"Ruta "+i.gizRoute}
-                                                    secondary={
-                                                        <React.Fragment>
-                                                            <Typography
-                                                                sx={{ display: 'inline' }}
-                                                                component="span"
-                                                                variant="body2"
-                                                                color="text.primary"
-                                                            >
-                                                                {" "} 
-                                                            </Typography>
-                                                            {"Momento ("+moment(i.sessionTimestamp).format('LLLL')+")"+
-                                                            new Date(i.sessionTimestamp).getUTCHours()}
-                                                        </React.Fragment>
-                                                    }
-                                                />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    ))}
+
+                                        {notifications.map((i: AlertNotification) => (
+                                            <Notification key={i.id} notification={i} handleClose={handleClose} />
+                                        ))}
+
                                     </List>
                                 </ClickAwayListener>
                             </Paper>

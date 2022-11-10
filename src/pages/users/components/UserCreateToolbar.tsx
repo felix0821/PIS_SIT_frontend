@@ -1,15 +1,9 @@
-import * as React from 'react';
-import { Fragment } from 'react';
 import Toolbar from '@mui/material/Toolbar';
+import { Fragment } from 'react';
 
 import {
-    SaveButton,
-    DeleteButton,
-    ToolbarProps,
-    useRecordContext,
-    useNotify,
-    useRedirect,
-    DeleteWithConfirmButton,
+    SaveButton, ToolbarProps, useNotify,
+    useRedirect
 } from 'react-admin';
 
 interface Props extends ToolbarProps {

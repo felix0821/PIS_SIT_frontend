@@ -32,8 +32,6 @@ export default function SelectVehicleAutocomplete() {
             })
 
         console.log(result)
-
-        
         setOptions(result)
     }
 

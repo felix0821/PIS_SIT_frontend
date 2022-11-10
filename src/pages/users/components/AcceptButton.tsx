@@ -1,15 +1,10 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
 import ThumbUp from '@mui/icons-material/ThumbUp';
+import Button from '@mui/material/Button';
+import PropTypes from 'prop-types';
 import {
-    useTranslate,
-    useUpdate,
-    useNotify,
-    useRedirect,
-    useRecordContext,
+    useNotify, useRecordContext, useRedirect, useTranslate,
+    useUpdate
 } from 'react-admin';
-import { Review } from '../../types';
 
 /**
  * This custom button demonstrate using useUpdate to update data
@@ -18,10 +13,10 @@ const AcceptButton = () => {
     const translate = useTranslate();
     const notify = useNotify();
     const redirectTo = useRedirect();
-    const record = useRecordContext<Review>();
+    const record = useRecordContext();
 
     const [approve, { isLoading }] = useUpdate(
-        'reviews',
+        'users',
         { id: record.id, data: { status: 'accepted' }, previousData: record },
         {
             mutationMode: 'undoable',

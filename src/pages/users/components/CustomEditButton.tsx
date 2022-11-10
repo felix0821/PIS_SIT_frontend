@@ -7,7 +7,7 @@ import UserEdit from './UserEdit';
 import { useNavigate } from 'react-router';
 import { AnySoaRecord } from 'dns';
 import { useRecordContext } from 'react-admin';
-import { User } from '../../types';
+import { User } from '../../../types';
 
 const style = {
   position: 'absolute' as 'absolute',

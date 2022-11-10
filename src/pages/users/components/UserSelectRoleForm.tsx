@@ -1,10 +1,8 @@
-import { Add, AddCircle, Delete } from "@mui/icons-material"
-import { Box, FormControl, FormControlLabel, FormLabel, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from "@mui/material"
-import { useCallback, useEffect, useState } from "react"
-import { Loading, useDataProvider, useNotify } from "react-admin"
-import CustomSelect from "./CustomSelect"
-import DriverForm from "./RoleForms/DriverForm"
-import OperatorForm from "./RoleForms/OperatorForm"
+import { Box } from "@mui/material"
+import { useState } from "react"
+import { useDataProvider, useNotify } from "react-admin"
+import DriverForm from "./role-forms/DriverForm"
+import OperatorForm from "./role-forms/OperatorForm"
 
 interface UserSelectRoleFormProps {
     roleId: string,
@@ -16,25 +14,16 @@ interface UserSelectRoleFormProps {
 export const UserSelectRoleForm = ({ roleId, userId }: UserSelectRoleFormProps) => {
 
 
-    const [role, setRole] = useState(roleId)
-
-    const notify = useNotify();
-
-    const dataProvider = useDataProvider();
-
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState();
+    const role = roleId
 
     //Para el rol operador
     const [savedConcesionaryOperator, setSavedConcesionaryOperator] = useState([]);
     const [transportCompanyRegistered, setTransportCompanyRegistered] = useState(false)
-    console.log("--> " + transportCompanyRegistered)
+    //console.log("--> " + transportCompanyRegistered)
 
     //Para el rol conductor
     const [driverTransportCompanyRegistered, setDriverTransportCompanyRegistered] = useState(false)
 
-
-    //if (loading) return <Loading />;
     return (
         <Box>
             {role == "1000002000001" && (//
@@ -61,7 +50,6 @@ export const UserSelectRoleForm = ({ roleId, userId }: UserSelectRoleFormProps) 
                     userId={userId}
                      />
             )}
-
 
         </Box>
     )
