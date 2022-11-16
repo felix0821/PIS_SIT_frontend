@@ -1,12 +1,13 @@
 import { TranslationMessages } from 'react-admin';
 import englishMessages from 'ra-language-english';
+import spanishMessages from './spanishMessages';
 
-const customEnglishMessages: TranslationMessages = {
-    ...englishMessages,
+const customSpanishMessages: TranslationMessages = {
+    ...spanishMessages,
     pos: {
         search: 'Search',
         configuration: 'Configuration',
-        language: 'Language',
+        language: 'Idioma',
         theme: {
             name: 'Theme',
             light: 'Light',
@@ -41,28 +42,28 @@ const customEnglishMessages: TranslationMessages = {
     },
     resources: {
         users: {
-            name: 'User |||| Users',
+            name: 'Persona |||| Personas',
         },
         alerts: {
-            name: 'Alert |||| Alerts',
+            name: 'Alerta |||| Alertas',
         },
         reviews: {
-            name: 'Review |||| Reviews',
+            name: 'Calificación |||| Calificaciones',
         },
         manageSIT:{
-            name: 'Manage SIT',
+            name: 'Gestion SIT |||| Gestion SIT',
             routes: {
-                name: 'Route |||| Routes',
+                name: 'Ruta |||| Rutas',
             },
             units: {
-                name: 'Unit |||| Units',
+                name: 'Unidad |||| Unidades',
             }
         }
        
     },
     system: {
-        name: "Integrated Transport System of Arequipa"
+        name: "Sistema Integrado de Transporte de Arequipa"
     }
 };
 
-export default customEnglishMessages;
+export default customSpanishMessages;

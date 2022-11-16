@@ -51,7 +51,7 @@ const Menu = ({ dense = false }: MenuProps) => {
             <MenuItemLink
                 to="/users"
                 state={{ _scrollToTop: true }}
-                primaryText={translate(`Personas`, {
+                primaryText={translate(`resources.users.name`, {
                     smart_count: 2,
                 })}
                 leftIcon={<users.icon />}
@@ -60,7 +60,7 @@ const Menu = ({ dense = false }: MenuProps) => {
             <MenuItemLink
                 to="/alerts"
                 state={{ _scrollToTop: true }}
-                primaryText={translate(`Alertas`, {
+                primaryText={translate(`resources.alerts.name`, {
                     smart_count: 2,
                 })}
                 leftIcon={<alerts.icon />}
@@ -69,7 +69,7 @@ const Menu = ({ dense = false }: MenuProps) => {
             <MenuItemLink
                 to="/reviews"
                 state={{ _scrollToTop: true }}
-                primaryText={translate(`Calificaciones`, {
+                primaryText={translate(`resources.reviews.name`, {
                     smart_count: 2,
                 })}
                 leftIcon={<reviews.icon />}
@@ -78,14 +78,14 @@ const Menu = ({ dense = false }: MenuProps) => {
             <SubMenu
                 handleToggle={() => handleToggle('menuSit')}
                 isOpen={state.menuSit}
-                name="Gestion SIT"
+                name={`resources.manageSIT.name`}
                 icon={<ManageAccountsIcon />}
                 dense={dense}
             >
                 <MenuItemLink
                     to="/units"
                     state={{ _scrollToTop: true }}
-                    primaryText={translate(`Unidades`, {
+                    primaryText={translate(`resources.manageSIT.units.name`, {
                         smart_count: 2,
                     })}
                     leftIcon={<units.icon />}
@@ -94,7 +94,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                 <MenuItemLink
                     to="/routes"
                     state={{ _scrollToTop: true }}
-                    primaryText={translate(`Rutas`, {
+                    primaryText={translate(`resources.manageSIT.routes.name`, {
                         smart_count: 2,
                     })}
                     leftIcon={<routes.icon />}

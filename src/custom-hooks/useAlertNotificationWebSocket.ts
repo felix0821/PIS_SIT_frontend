@@ -14,7 +14,9 @@ export const useAlertNotificationWebSocket = () => {
     const connect = () => {
         let Sock = new SockJS('https://sit-backend.herokuapp.com/ws');
         //let Sock = new SockJS('http://localhost:3334/notifications');
+        
         stompClient = over(Sock);
+        //stompClient.debug = () => {};
         stompClient.connect({}, onConnected, onError);
     }
     const onConnected = () => {

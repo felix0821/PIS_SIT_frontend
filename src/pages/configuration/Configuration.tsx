@@ -5,16 +5,16 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { useTranslate, useLocaleState, useTheme, Title } from 'react-admin';
 
-import { darkTheme, lightTheme } from '../layout/themes';
+import { darkTheme, lightTheme } from '../../layout/themes';
 
-const Perfil = () => {
+const Configuration = () => {
     const translate = useTranslate();
     const [locale, setLocale] = useLocaleState();
     const [theme, setTheme] = useTheme();
 
     return (
         <Card>
-            <Title title={translate('Perfil')} />
+            <Title title={translate('pos.configuration')} />
             <CardContent>
                 <Box sx={{ width: '10em', display: 'inline-block' }}>
                     {translate('pos.theme.name')}
@@ -56,17 +56,18 @@ const Perfil = () => {
                 >
                     en
                 </Button>
+
                 <Button
                     variant="contained"
                     sx={{ margin: '1em' }}
-                    color={locale === 'fr' ? 'primary' : 'secondary'}
-                    onClick={() => setLocale('fr')}
+                    color={locale === 'es' ? 'primary' : 'secondary'}
+                    onClick={() => setLocale('es')}
                 >
-                    fr
+                    es
                 </Button>
             </CardContent>
         </Card>
     );
 };
 
-export default Perfil;
+export default Configuration;

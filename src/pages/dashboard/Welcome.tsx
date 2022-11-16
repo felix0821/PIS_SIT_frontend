@@ -20,7 +20,7 @@ const Welcome = () => {
             <Box display="flex">
                 <Box flex="1">
                     <Typography variant="h5" component="h2" gutterBottom>
-                        {translate('Integrated Transport System of Arequipa')}
+                        {translate('system.name')}
                     </Typography>
                     <CardActions
                         sx={{

@@ -1,5 +1,5 @@
 import { AddCircle, Delete, Save } from '@mui/icons-material'
-import { Box, Button, IconButton, List, ListItem, ListItemText, SelectChangeEvent, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, IconButton, List, ListItem, ListItemText, SelectChangeEvent, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDataProvider, useNotify } from 'react-admin';
 import CustomSelect from '../CustomSelect'
@@ -28,9 +28,11 @@ export default function DriverForm(props: DriverFormProps) {
 
     const [transportCompany, setTransportCompany] = useState<TransportCompanyItem>({ value: '', text: '' })
     const [vehicle, setVehicle] = useState<VehicleItem>({ value: '', text: '' })
+    const [vehicleAutomatic, setVehicleAutomatic] = useState<VehicleItem>({ value: '', text: '' })
 
     const [vehicleRegistered, setVehicleRegistered] = useState(false)
 
+    const [loading, setLoading] = useState(false);
 
 
 
@@ -141,19 +143,31 @@ export default function DriverForm(props: DriverFormProps) {
 
     }
 
-    const updateVehicles = () => {
+    const handleChangedVehicleAutocomplete = (value: any) => {
+        console.log(value)
+        if (value == '') {
+            setVehicleAutomatic({ value: '', text: '' });
+        } else {
+            setVehicleAutomatic({ value: value, text: value });
+        }
+    }
 
+
+    const updateVehicles = () => {
+        setLoading(true);
         dataProvider.getVehicle('routes', { id: transportCompany.value })
             .then(({ data }: any) => {
                 setVehicleItems(data)
                 setVehicleItems(data)
                 //setLoading(false);
                 //console.log(data);
+                setLoading(false);
             })
             .catch((error: any) => {
                 //setError(error);
                 console.log('Error ' + error.status + ': ' + error.body.content)
                 //setLoading(false);
+                setLoading(false);
             })
 
         console.log(vehicleItems)
@@ -180,7 +194,14 @@ export default function DriverForm(props: DriverFormProps) {
 
     }
 
-
+    if (loading) return <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <CircularProgress sx={{ marginY: 4 }} />
+            <Typography variant="h5" component="h5" sx={{ marginY: 2 }}>
+                Cargando
+            </Typography>
+        </Box>
+    </Box>
 
     return (
         <>
@@ -206,9 +227,17 @@ export default function DriverForm(props: DriverFormProps) {
                                     <CustomSelect items={vehicleItems} label="Vehicle" value={vehicle.value} handleChange={handleChangedVehicle} />
                                 </Box>
 
-                                <IconButton size="large" onClick={() => setData(vehicle)}>
+                                {/*<IconButton size="large" onClick={() => setData(vehicle)}>
                                     <Save color="primary" fontSize="inherit" />
-                                </IconButton>
+                    </IconButton>*/}
+                                <Button
+                                    color='secondary'
+                                    size='small'
+                                    variant='contained'
+                                    sx={{ marginY: 2, marginX: 1 }}
+                                    onClick={() => setData(vehicle)}
+
+                                >Guardar</Button>
                             </Box>
                         </>
                     )
@@ -235,27 +264,27 @@ export default function DriverForm(props: DriverFormProps) {
             <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
                 O busque el vehiculo por placa:
             </Typography>
-            
-            <Box display='flex' width={'100%'}>
-                    <Box sx={{ flex: '1 1 auto' }}>
-                        <SelectVehicleAutocomplete />
-                    </Box>
-                    <Button
-                        color='secondary'
-                        size='small'
-                        variant='contained'
-                        sx={{ marginY: 2, marginX: 1 }}
-                        onClick={ () => {
-                            notify('Función no implementada', {
-                                type: 'info',
-                                messageArgs: { smart_count: 1 },
-                                undoable: false,
-                            });
-                        }
-                            /*() => deleteData(id)*/}
 
-                    >Guardar</Button>
+            <Box display='flex' width={'100%'}>
+                <Box sx={{ flex: '1 1 auto' }}>
+                    <SelectVehicleAutocomplete handleChangue={handleChangedVehicleAutocomplete} />
                 </Box>
+                <Button
+                    color='secondary'
+                    size='small'
+                    variant='contained'
+                    sx={{ marginY: 2, marginX: 1 }}
+                    onClick={() => setData(vehicleAutomatic)}
+                /*onClick={() => {
+                    notify('Función no implementada', {
+                        type: 'info',
+                        messageArgs: { smart_count: 1 },
+                        undoable: false,
+                    });
+                }}*/
+
+                >Guardar</Button>
+            </Box>
 
         </>
     )

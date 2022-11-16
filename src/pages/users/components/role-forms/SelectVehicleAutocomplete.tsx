@@ -3,8 +3,13 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useEffect, useState } from 'react';
 import { useDataProvider } from 'react-admin';
+import { SelectChangeEvent } from '@mui/material';
 
-export default function SelectVehicleAutocomplete() {
+interface SelectVehicleAutocompleteProps {
+    handleChangue: any
+}
+
+export default function SelectVehicleAutocomplete({handleChangue}: SelectVehicleAutocompleteProps) {
 
     const [options, setOptions] = useState<any[]>([])
 
@@ -42,7 +47,10 @@ export default function SelectVehicleAutocomplete() {
             id="combo-box-demo"
             options={options}
             sx={{ width: '100%' }}
-            onChange={() => console.log("valor guardado")}
+            onChange={(e: any) => {
+                console.log("fws");
+                handleChangue(e.target.innerText);
+            }}
             renderInput={(params) => <TextField {...params} label="Placa" onChange={(v) => searchOptions(v.target.value)} />}
         />
     );

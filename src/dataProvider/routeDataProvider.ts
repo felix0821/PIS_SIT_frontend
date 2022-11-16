@@ -71,7 +71,7 @@ export const routeDataProvider =  {
         });
     },
     getConcesionary: (resource: string, props: any) => {
-        resource = "concession/dropdown"
+        resource = Enviroment.ROUTES_FROM_COMPANY;
 
         const url = `${apiUrl}/${resource}?transportCompany=${props.id}`;
 
@@ -89,6 +89,8 @@ export const routeDataProvider =  {
     registerUserInConcesionary: (resource: string, params: any) => {
 
         resource = 'concession/operator/register';
+
+        resource = Enviroment.OPERATOR+"/"+params.data.personId+"/"+Enviroment.ROUTES+"/"+params.data.routeId+"/register";
 
         const { headers } = useHeaderWithToken()
 
@@ -108,12 +110,13 @@ export const routeDataProvider =  {
     registerUserInVehicle: (resource: string, params: any) => {
 
         resource = 'vehicle/driver/register';
+        resource = `/driver/${params.data.personId}/vehicle/${params.data.vehicleId}`;
 
         const { headers } = useHeaderWithToken()
 
         return httpClient(`${ apiUrl }/${ resource }`, {
             method: 'POST',
-            body: JSON.stringify(params.data),
+            //body: JSON.stringify(params.data),
             headers: headers
         }).then(({ json, status }) => {
             return {
