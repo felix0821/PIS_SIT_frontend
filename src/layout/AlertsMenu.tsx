@@ -15,14 +15,15 @@ import { AlertNotification } from '../types';
 import { Notification } from './components/Notification';
 import { useAlertNotificationWebSocket } from '../custom-hooks';
 import React from 'react';
+import { Notification2 } from './components/Notification2';
 
 export default function AlertsMenu() {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLButtonElement>(null);
-    const [notifications, setNotifications] = useState<AlertNotification[]>([]);
+    const [notifications, setNotifications] = useState<AlertNotification[]>([{ id: "fef3", image: "fwf", specification: "fewf", title: "Notificación", type: "fer", timestamp: "2022-11-10T14:10:21+00:00" }]);
     const [cantAlerts, setCantAlerts] = useState(0)
 
-    const {connect, newNotifify} = useAlertNotificationWebSocket();
+    const { connect, newNotifify } = useAlertNotificationWebSocket();
 
     const dataProvider = useDataProvider();
     const notify = useNotify();
@@ -30,7 +31,7 @@ export default function AlertsMenu() {
     useEffect(() => {
         dataProvider.getNotifications('alerts')
             .then(({ data }: any) => {
-                setNotifications(data.allItems)
+                setNotifications(data.allNotification)
                 //setLoading(false);
 
             })
@@ -40,11 +41,11 @@ export default function AlertsMenu() {
                 //setLoading(false);
             })
         connect()
-        
+
     }, []);
 
-    useEffect(()=>{
-        if(newNotifify.id == "") return
+    useEffect(() => {
+        if (newNotifify.id == "") return
         setNotifications([newNotifify, ...notifications]);
         setCantAlerts(cantAlerts + 1);
 
@@ -117,7 +118,7 @@ export default function AlertsMenu() {
                                     placement === 'bottom-start' ? 'left top' : 'left bottom',
                             }}
                         >
-                            <Paper sx={{ width: 320, maxWidth: '100%', bgcolor: 'background.paper', maxHeight: 400, overflow: 'auto'}}>
+                            <Paper sx={{ width: 320, maxWidth: '100%', bgcolor: 'background.paper', maxHeight: 400, overflow: 'auto' }}>
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <List
                                         aria-labelledby="composition-button"
@@ -127,6 +128,9 @@ export default function AlertsMenu() {
 
                                         {notifications.map((i: AlertNotification) => (
                                             <Notification key={i.id} notification={i} handleClose={handleClose} />
+                                        ))}
+                                        {notifications.map((i: AlertNotification) => (
+                                            <Notification2 key={i.id} notification={i} handleClose={handleClose} />
                                         ))}
 
                                     </List>

@@ -17,6 +17,11 @@ export const Enviroment = {
     USER_VERIFY_EMAIL: 'person/query/verify-email/',
     USER_VERIFY_DOCUMENT: 'person/query/verify-identification/',
 
-    REVIEWS: 'service-rating'
+    REVIEWS: 'service-rating',
+
+    ROUTES_FROM_COMPANY: 'route/dropdown',
+    ROUTE_USER_REGISTER: 'route/operator/register',
+    ROUTES: 'route',
+    OPERATOR: 'operator',
 
 };

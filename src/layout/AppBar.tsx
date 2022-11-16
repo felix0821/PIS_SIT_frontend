@@ -24,10 +24,9 @@ const Perfil = React.forwardRef((props, ref) => {
             // @ts-ignore
             ref={ref}
             {...props}
-            to="/perfil"
+            to="/configuration"
         >
             <ListItemIcon>
-                <PersonIcon />
                 <PersonIcon />
             </ListItemIcon>
             <ListItemText>{translate('Perfil')}</ListItemText>

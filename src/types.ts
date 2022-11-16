@@ -32,7 +32,8 @@ export interface AlertNotification extends RaRecord {
     title?: string,
     type?: string,
     specification?: string,
-    timestamp?: string
+    timestamp?: string,
+    reference?: string
 }
 
 export interface Vehicle extends RaRecord {

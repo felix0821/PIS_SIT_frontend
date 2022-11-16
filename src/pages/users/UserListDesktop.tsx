@@ -2,6 +2,7 @@ import {
     Datagrid, DeleteWithConfirmButton, Identifier, TextField
 } from 'react-admin';
 import CustomEditButton from './components/CustomEditButton';
+import CustomEditRoleButton from './components/CustomEditRoleButton';
 
 export interface UserListDesktopProps {
     selectedRow?: Identifier;
@@ -30,6 +31,7 @@ const UserListDesktop = ({ selectedRow }: UserListDesktopProps) => (
         <TextField source="lastnameMother" label="Apellido Materno" />
         <TextField source="email" label="Correo Electrónico" overflow='hidden' textOverflow='ellipsis' whiteSpace='nowrap'/>
         <CustomEditButton id={selectedRow} />
+        <CustomEditRoleButton id={selectedRow} />
         <DeleteWithConfirmButton/>
     </Datagrid>
 );

@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router';
 import { AnySoaRecord } from 'dns';
 import { useRecordContext } from 'react-admin';
 import { User } from '../../../types';
-import { Edit } from '@mui/icons-material';
+import UserRoleEdit from './UserRoleEdit';
+import { AdminPanelSettings, RollerSkatingTwoTone } from '@mui/icons-material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,7 +24,7 @@ const style = {
 };
 
 
-export default function CustomEditButton(id: any) {
+export default function CustomEditRoleButton(id: any) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -38,7 +39,7 @@ export default function CustomEditButton(id: any) {
 
   return (
     <div>
-      <Button onClick={handleOpen} startIcon={<Edit/>} >Edit</Button>
+      <Button onClick={handleOpen} color='secondary' startIcon={<AdminPanelSettings/>}>Roles</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -46,7 +47,7 @@ export default function CustomEditButton(id: any) {
         aria-describedby="modal-modal-description"
       >
         <div>
-          <UserEdit
+        <UserRoleEdit
           id={record.id}
           onCancel={handleCloseM}
           />

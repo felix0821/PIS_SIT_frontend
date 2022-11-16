@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Admin, ListGuesser, Resource } from 'react-admin';
+import { Admin, CustomRoutes, ListGuesser, Resource, TranslationMessages } from 'react-admin';
 import authProvider from './authProvider';  
 import { Login, Layout } from './layout';
 
@@ -10,7 +10,31 @@ import routes from './pages/routes';
 import reviews from './pages/reviews';
 import vehicles from './pages/units';
 import { Dashboard } from './pages/dashboard';
-//
+import { Route } from 'react-router';
+import Configuration from './pages/configuration/Configuration';
+import polyglotI18nProvider from 'ra-i18n-polyglot';
+
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+
+const translations = { 'en': en, 'es': es };
+
+function getLocaleI(locale: string): TranslationMessages {
+    if(locale === 'en') return en;
+    return es
+}
+
+const i18nProvider = polyglotI18nProvider(
+    locale => getLocaleI(locale),
+    'es', // default locale
+    { allowMissing: true }
+    
+);
+
+
+
+
 
 const App = () => {
     return (
@@ -23,6 +47,7 @@ const App = () => {
             dashboard={Dashboard}
             disableTelemetry
             theme={lightTheme}
+            i18nProvider={i18nProvider}
             
         >
             <Resource name="users" {...users} />
@@ -30,6 +55,10 @@ const App = () => {
             <Resource name="units" {...vehicles} />
             <Resource name="reviews" {...reviews} />
             <Resource name="routes" {...routes} />
+
+            <CustomRoutes>
+                <Route path="/configuration" element={<Configuration />} />
+            </CustomRoutes>
         </Admin>
     );
 };

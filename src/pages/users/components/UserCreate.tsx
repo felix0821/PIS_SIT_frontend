@@ -1,11 +1,11 @@
-import { Box, CardContent, CircularProgress, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, CardContent, CircularProgress, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Field, FormikValues } from 'formik';
 import { Select, TextField } from 'formik-material-ui';
 import { CreateProps, useDataProvider, useListContext, useNotify } from 'react-admin';
 import { Person, Role } from '../../../types';
 import { useEffect, useState } from 'react';
 import { object, string } from 'yup';
-import { Close } from '@mui/icons-material';
+import { Close, Delete, Save } from '@mui/icons-material';
 import MenuItem from '@mui/material/MenuItem';
 import DatePickerField from './DatePickerField';
 import { FormikStep, FormikStepper } from './form-stepper/FormikStepper';
@@ -96,7 +96,8 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     const [currentUserId, setCurrentUserId] = useState('')
     const [disableFieldBirth, setDisableFieldBirth] = useState(false)
 
-    const [roleSelected, setRoleSelected] = useState<Role>({id: '', name: ''});
+    const [roleSelected, setRoleSelected] = useState<Role>({ id: '', name: '' });
+    const [roleSelectedFieldValue, setRoleSelectedFieldValue] = useState<Role>({ id: '', name: '' });
     const [changueForm, setChangueForm] = useState(false)
     const [activeSelectRole, setActiveSelectRole] = useState(false)
 
@@ -195,6 +196,31 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
         let createUserInRole = await dataProvider.registerUserInRole('users', { data: { userId: userId, roleId: roleId } })
             .then(({ data }: any) => {
                 notify('Code ' + data.status + ': ' + 'Rol asignado ' + data.message, {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data
+            })
+            .catch((error: any) => {
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (createUserInRole.status == 201) return true
+        return false
+    }
+
+    const removeRoleFromUser = async (userId: any, roleId: any) => {
+        let createUserInRole = await dataProvider.removeRoleFromUser('users', { data: { userId: userId, roleId: roleId } })
+            .then(({ data }: any) => {
+                notify('Code ' + data.status + ': ' + 'Rol eliminado ' + data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -374,33 +400,81 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                         <Box padding={2} >
                             {
                                 !activeSelectRole ? (
-                                    <Field
-                                        fullWidth
-                                        name="rol"
-                                        component={Select}
-                                        label="Seleccionar Rol"
-                                        value=''
-                                        onChange={(e: any, { props }: FormikValues) => {
+                                    <>
+                                        <Field
+                                            fullWidth
+                                            name="rol"
+                                            component={Select}
+                                            label="Seleccionar Rol"
+                                            //value=''
+
+                                            onChange={(e: any, { props }: FormikValues) => {
+                                                setRoleSelectedFieldValue({ id: props.value, name: props.children });
+                                            }}
+                                        /*onChange={(e: any, { props }: FormikValues) => {
                                             if (props.value == '') return
                                             let result = roles.find(r => r.value == props.value)
 
                                             if (!setRoleInUser(currentUserId, props.value)) return
 
-                                            setRoleSelected({id: props.value, name: result.text});
+                                            setRoleSelected({ id: props.value, name: result.text });
                                             setChangueForm(!changueForm)
                                             setActiveSelectRole(true)
 
-                                        }}
-                                    >
-                                        <MenuItem value=''><em>None</em></MenuItem>
-                                        {!loading && roles.map((rol) =>
-                                            <MenuItem key={rol.value} value={rol.value}>{rol.text}</MenuItem>
-                                        )}
-                                    </Field>
+                                        }}*/
+                                        >
+                                            <MenuItem value=''><em>None</em></MenuItem>
+                                            {!loading && roles.map((rol) =>
+                                                <MenuItem key={rol.value} value={rol.value}>{rol.text}</MenuItem>
+                                            )}
+                                        </Field>
+                                        <Button
+                                            color='secondary'
+                                            size='small'
+                                            variant='contained'
+                                            sx={{ marginY: 2, marginX: 1 }}
+                                            onClick={() => {
+                                                /*console.log(roleSelectedFieldValue);
+                                                return;*/
+                                                if (roleSelectedFieldValue.id == '') return;
+
+                                                if (!setRoleInUser(currentUserId, roleSelectedFieldValue.id)) return
+
+                                                setRoleSelected({ id: roleSelectedFieldValue.id, name: roleSelectedFieldValue.name });
+                                                setChangueForm(!changueForm)
+                                                setActiveSelectRole(true)
+
+                                            }}
+
+
+                                        >Guardar</Button>
+                                    </>
                                 ) : (
-                                    <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
-                                        Rol seleccionado: {roleSelected.name}
-                                    </Typography>
+                                    <Box display='flex' >
+                                        <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                                            Rol seleccionado: {roleSelected.name}
+                                        </Typography>
+                                        <IconButton
+                                            size="large"
+                                            onClick={ async() => {
+                                                notify('Función no implementada', {
+                                                    type: 'info',
+                                                    messageArgs: { smart_count: 1 },
+                                                    undoable: false,
+                                                });
+                                                return;
+                                                if (await removeRoleFromUser(currentUserId, roleSelected.id)) {
+                                                    setRoleSelected({ id: '', name: '' });
+                                                    setChangueForm(!changueForm)
+                                                    setActiveSelectRole(false)
+                                                    setRoleSelectedFieldValue({ id: '', name: '' });
+                                                }
+                                            }
+                                        /*() => deleteData(id)*/}
+                                        >
+                                            <Delete sx={{ color: 'red' }} fontSize="inherit" />
+                                        </IconButton>
+                                    </Box>
                                 )
                             }
 

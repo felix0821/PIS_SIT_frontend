@@ -1,4 +1,5 @@
 import {
+    Box,
     Link as MuiLink, ListItem, ListItemText
 } from '@mui/material';
 import { Fragment } from 'react';
@@ -18,11 +19,7 @@ export const UserItem = () => {
     }
     return (
         <MuiLink
-            to={createPath({
-                resource: 'users',
-                type: 'edit',
-                id: record.id,
-            })}
+            to=''
             component={Link}
             underline="none"
             color="inherit"
@@ -30,12 +27,14 @@ export const UserItem = () => {
             <ListItem button>
                 <ListItemText
                     primary={
-                        <Fragment>
-                            <TextField source="name" label="Nombres" />
-                            <TextField source="lastnameFather" label="Apellido Paterno" />
-                            <TextField source="lastnameMother" label="Apellido Materno" />
-                            <DeleteWithConfirmButton />
-                        </Fragment>
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            {record.name + ", " + record.lastnameFather + " " + record.lastnameMother}
+                            <Box display='flex' flexDirection='row' alignItems='center'>
+                                <CustomEditButton />
+                                <DeleteWithConfirmButton />
+                            </Box>
+
+                        </Box>
                     }
                     secondary={record.email}
                     secondaryTypographyProps={{ noWrap: true }}
