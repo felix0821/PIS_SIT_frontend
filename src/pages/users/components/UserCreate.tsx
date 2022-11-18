@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DatePickerField from './DatePickerField';
 import { FormikStep, FormikStepper } from './form-stepper/FormikStepper';
 import { UserSelectRoleForm } from './UserSelectRoleForm';
-import "./formik.css";
+//import "./formik.css";
 
 interface Props extends CreateProps<Person> {
     onCancel: () => void;
@@ -238,7 +238,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                     message: error.body.content
                 }
             })
-        if (createUserInRole.status == 201) return true
+        if (createUserInRole.status == 200) return true
         return false
     }
 
@@ -371,12 +371,12 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
 
                             <Box flex={1}>
                                 <Box paddingBottom={2} display="flex" >
-                                    <Field name="gender" component={Select} label="Género" flex={1} >
+                                    <Field name="gender" component={Select} label="Género" flex={1} innerRef={(e: any) => {console.log(e)}} >
                                         <MenuItem value="M">Masculino</MenuItem>
                                         <MenuItem value="F">Femenino</MenuItem>
                                     </Field>
                                 </Box>
-                                <Box paddingBottom={2}>
+                                <Box paddingBottom={2} width='100%'>
                                     <Field name="personIdentification.documentId" component={Select} label="Documento de Identidad">
                                         {!loading && documents.map((doc) =>
                                             <MenuItem key={doc.value} value={doc.value}>{doc.text}</MenuItem>
@@ -411,17 +411,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                             onChange={(e: any, { props }: FormikValues) => {
                                                 setRoleSelectedFieldValue({ id: props.value, name: props.children });
                                             }}
-                                        /*onChange={(e: any, { props }: FormikValues) => {
-                                            if (props.value == '') return
-                                            let result = roles.find(r => r.value == props.value)
-
-                                            if (!setRoleInUser(currentUserId, props.value)) return
-
-                                            setRoleSelected({ id: props.value, name: result.text });
-                                            setChangueForm(!changueForm)
-                                            setActiveSelectRole(true)
-
-                                        }}*/
+                                    
                                         >
                                             <MenuItem value=''><em>None</em></MenuItem>
                                             {!loading && roles.map((rol) =>
@@ -434,8 +424,6 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                             variant='contained'
                                             sx={{ marginY: 2, marginX: 1 }}
                                             onClick={() => {
-                                                /*console.log(roleSelectedFieldValue);
-                                                return;*/
                                                 if (roleSelectedFieldValue.id == '') return;
 
                                                 if (!setRoleInUser(currentUserId, roleSelectedFieldValue.id)) return
@@ -447,7 +435,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                             }}
 
 
-                                        >Guardar</Button>
+                                        >Guardar rol</Button>
                                     </>
                                 ) : (
                                     <Box display='flex' >
@@ -456,21 +444,13 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                                         </Typography>
                                         <IconButton
                                             size="large"
-                                            onClick={ async() => {
-                                                notify('Función no implementada', {
-                                                    type: 'info',
-                                                    messageArgs: { smart_count: 1 },
-                                                    undoable: false,
-                                                });
-                                                return;
+                                            onClick={async () => {
                                                 if (await removeRoleFromUser(currentUserId, roleSelected.id)) {
                                                     setRoleSelected({ id: '', name: '' });
                                                     setChangueForm(!changueForm)
                                                     setActiveSelectRole(false)
-                                                    setRoleSelectedFieldValue({ id: '', name: '' });
                                                 }
-                                            }
-                                        /*() => deleteData(id)*/}
+                                            }}
                                         >
                                             <Delete sx={{ color: 'red' }} fontSize="inherit" />
                                         </IconButton>

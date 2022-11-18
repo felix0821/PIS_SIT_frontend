@@ -102,7 +102,7 @@ export default function OperatorForm(props: OperatorFormProps) {
         });*/
     }
 
-    const deleteData = (id: any) => {
+    const deleteData = async (id: any) => {
         let current = props.currentData
         let newData: any[] = [];
 
@@ -112,12 +112,32 @@ export default function OperatorForm(props: OperatorFormProps) {
             }
         }
 
+
+        let deleteRoute = await dataProvider.removeUserFromConcesionary('routes', { data: { routeId: id.value, personId: props.userId } })
+            .then(({ data }: any) => {
+                notify('Code ' + data.status + ': ' + '' + data.message, {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data
+            })
+            .catch((error: any) => {
+                //setError(error)
+                //setLoading(false);
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return {
+                    status: error.status,
+                    message: error.body.content
+                }
+            })
+        if (deleteRoute.status != 200) return
+
         props.updateData(newData)
-        notify('Ruta eliminada', {
-            type: 'info',
-            messageArgs: { smart_count: 1 },
-            undoable: false,
-        });
     }
 
 
@@ -240,14 +260,7 @@ export default function OperatorForm(props: OperatorFormProps) {
                                 </Box>
                                 <IconButton
                                     size="large"
-                                    onClick={ () => {
-                                        notify('Función no implementada', {
-                                            type: 'info',
-                                            messageArgs: { smart_count: 1 },
-                                            undoable: false,
-                                        });
-                                    }
-                                        /*() => deleteData(id)*/}
+                                    onClick={ () => deleteData(id) }
                                 >
                                     <Delete sx={{ color: 'red' }} fontSize="inherit" />
                                 </IconButton>
