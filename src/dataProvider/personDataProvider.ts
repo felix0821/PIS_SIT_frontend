@@ -112,7 +112,7 @@ export const personDataProvider = {
         let url = `${apiUrl}/person/${data.personId}/role/${data.roleId}/remove`
 
         return httpClient(url, {
-            method: 'POST',
+            method: 'DELETE',
             //body: JSON.stringify(data),
             headers: headers
         }).then(({ json, status }) => {

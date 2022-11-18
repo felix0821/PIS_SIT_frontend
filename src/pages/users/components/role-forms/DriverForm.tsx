@@ -53,32 +53,80 @@ export default function DriverForm(props: DriverFormProps) {
         //guardar en base de datos
         let vehiUser = await dataProvider.registerUserInVehicle('routes', { data: { vehicleId: vehicle.value, personId: props.userId } })
             .then(({ data }: any) => {
-                setTransportCompanyItems(data)
-                setTransportCompanyItems(data)
-                //setLoading(false);
-                //console.log(data);
                 setVehicleRegistered(true)
                 notify('Vehiculo guardado', {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
                 });
+                return data;
             })
             .catch((error: any) => {
-                //setError(error);
                 console.log('Error ' + error.status + ': ' + error.body.content)
-                //setLoading(false);
+                return error;
+            })
+
+        if (!(vehiUser.status != 201)) return
+    }
+
+
+    const setData2 = async (id: any) => {
+
+        if (id.value == '') {
+            notify('Seleccione vehiculo por favor', {
+                type: 'info',
+                messageArgs: { smart_count: 1 },
+                undoable: false,
+            });
+            return
+        }
+
+        //guardar en base de datos
+        let vehiUser = await dataProvider.registerUserInVehicle('routes', { data: { vehicleId: vehicleAutomatic.value, personId: props.userId } })
+            .then(({ data }: any) => {
+                setVehicleRegistered(true)
+                notify('Vehiculo guardado', {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data;
+            })
+            .catch((error: any) => {
+                console.log('Error ' + error.status + ': ' + error.body.content)
+                return error;
             })
 
         if (!(vehiUser.status != 201)) return
 
-        //setVehicleRegistered(true)
-        //end save
-        /*notify('Vehiculo guardado', {
-            type: 'success',
-            messageArgs: { smart_count: 1 },
-            undoable: false,
-        });*/
+    }
+
+    const deleteData = async () => {
+
+        let valueVehicle = (!!vehicleAutomatic.value) ? vehicleAutomatic.value : vehicle.value;
+        //guardar en base de datos
+        let removeVehicle = await dataProvider.removeUserFromVehicle('routes', { data: { vehicleId: valueVehicle, personId: props.userId } })
+            .then(({ data }: any) => {
+                setVehicleRegistered(false)
+                notify('Vehiculo Eliminado', {
+                    type: 'success',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                return data;
+            })
+            .catch((error: any) => {
+                console.log('Error ' + error.status + ': ' + error.body.content)
+                notify('Error ' + error.status + ': ' + error.body.content, {
+                    type: 'warning',
+                    messageArgs: { smart_count: 1 },
+                    undoable: false,
+                });
+                //setLoading(false);
+                return error;
+            })
+
+        if (!(removeVehicle.status != 200)) return
     }
 
 
@@ -107,23 +155,10 @@ export default function DriverForm(props: DriverFormProps) {
             for (let e of transportCompanyItems) {
                 if (e.value == event.target.value) {
                     setTransportCompany({ value: event.target.value, text: e.text });
-                    setTransportCompany({ value: event.target.value, text: e.text });
                     break
                 }
             }
         }
-        //setTransportCompany(event.target.value);
-
-        //let dataR = await getRoutes(event.target.value)
-
-        /*let dR: any[] = []
-        if(dataR != undefined){
-            dR = dataR.data!;
-            console.log(dR);
-            setConcesionarioItems(dR);
-        }  
-
-        */
 
         setVehicle({ value: '', text: '' })
 
@@ -144,7 +179,7 @@ export default function DriverForm(props: DriverFormProps) {
     }
 
     const handleChangedVehicleAutocomplete = (value: any) => {
-        console.log(value)
+        //console.log(value)
         if (value == '') {
             setVehicleAutomatic({ value: '', text: '' });
         } else {
@@ -206,18 +241,13 @@ export default function DriverForm(props: DriverFormProps) {
     return (
         <>
 
-            {props.driverTransportCompanyRegistered ? (
+            {(!vehicleRegistered) ? (
                 <>
-                    <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
-                        Empresa: {transportCompany.text}
-                    </Typography>
-
-                    {vehicleRegistered ? (
-                        <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
-                            Vehiculo: {vehicle.text}
-                        </Typography>
-                    ) : (
+                    {props.driverTransportCompanyRegistered ? (
                         <>
+                            <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                                Empresa: {transportCompany.text}
+                            </Typography>
 
                             <Typography variant="subtitle1" component="h2">
                                 Seleccione Vehiculo:
@@ -227,9 +257,6 @@ export default function DriverForm(props: DriverFormProps) {
                                     <CustomSelect items={vehicleItems} label="Vehicle" value={vehicle.value} handleChange={handleChangedVehicle} />
                                 </Box>
 
-                                {/*<IconButton size="large" onClick={() => setData(vehicle)}>
-                                    <Save color="primary" fontSize="inherit" />
-                    </IconButton>*/}
                                 <Button
                                     color='secondary'
                                     size='small'
@@ -240,51 +267,58 @@ export default function DriverForm(props: DriverFormProps) {
                                 >Guardar</Button>
                             </Box>
                         </>
-                    )
-                    }
+                    ) : (
+                        <>
+                            <Typography variant="subtitle1" component="h2">
+                                Seleccione Empresa:
+                            </Typography>
+                            <Box display='flex' width={'100%'}>
+                                <Box sx={{ flex: '1 1 auto' }}>
+                                    <CustomSelect items={transportCompanyItems} label="Empresa" value={transportCompany.value} handleChange={handleChangedTransportCompany} />
+                                </Box>
+                                <Button
+                                    color='secondary'
+                                    size='small'
+                                    variant='contained'
+                                    sx={{ marginY: 2, marginX: 1 }}
+                                    onClick={handleClickSetTransportCompany}
 
+                                >Guardar</Button>
+                            </Box>
+                        </>
+                    )}
+                    <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                        O busque el vehiculo por placa:
+                    </Typography>
 
+                    <Box display='flex' width={'100%'}>
+                        <Box sx={{ flex: '1 1 auto' }}>
+                            <SelectVehicleAutocomplete handleChangue={handleChangedVehicleAutocomplete} />
+                        </Box>
+                        <Button
+                            color='secondary'
+                            size='small'
+                            variant='contained'
+                            sx={{ marginY: 2, marginX: 1 }}
+                            onClick={() => setData2(vehicleAutomatic)}
+
+                        >Guardar</Button>
+                    </Box>
                 </>
             ) : (
-                <Box display='flex' width={'100%'}>
-                    <Box sx={{ flex: '1 1 auto' }}>
-                        <CustomSelect items={transportCompanyItems} label="Empresa" value={transportCompany.value} handleChange={handleChangedTransportCompany} />
-                    </Box>
-                    <Button
-                        color='secondary'
-                        size='small'
-                        variant='contained'
-                        sx={{ marginY: 2, marginX: 1 }}
-                        onClick={handleClickSetTransportCompany}
+                <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
+                    Vehiculo: {(!!vehicle.text) ? vehicle.text : vehicleAutomatic.text}
+                    <IconButton
+                        size="large"
+                        onClick={() => deleteData()}
+                    >
+                        <Delete sx={{ color: 'red' }} fontSize="inherit" />
+                    </IconButton>
+                </Typography>
+            )
+            }
 
-                    >Guardar</Button>
-                </Box>
-            )}
 
-            <Typography variant="h6" component="h5" sx={{ marginY: 2 }}>
-                O busque el vehiculo por placa:
-            </Typography>
-
-            <Box display='flex' width={'100%'}>
-                <Box sx={{ flex: '1 1 auto' }}>
-                    <SelectVehicleAutocomplete handleChangue={handleChangedVehicleAutocomplete} />
-                </Box>
-                <Button
-                    color='secondary'
-                    size='small'
-                    variant='contained'
-                    sx={{ marginY: 2, marginX: 1 }}
-                    onClick={() => setData(vehicleAutomatic)}
-                /*onClick={() => {
-                    notify('Función no implementada', {
-                        type: 'info',
-                        messageArgs: { smart_count: 1 },
-                        undoable: false,
-                    });
-                }}*/
-
-                >Guardar</Button>
-            </Box>
 
         </>
     )

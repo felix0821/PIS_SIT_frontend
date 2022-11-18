@@ -107,10 +107,32 @@ export const routeDataProvider =  {
             }
         });
     },
+    removeUserFromConcesionary: (resource: string, params: any) => {
+
+        resource = 'concession/operator/register';
+
+        resource = Enviroment.OPERATOR+"/"+params.data.personId+"/"+Enviroment.ROUTES+"/"+params.data.routeId+"/remove";
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'DELETE',
+            //body: JSON.stringify(params.data),
+            headers: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
+        });
+    },
     registerUserInVehicle: (resource: string, params: any) => {
 
         resource = 'vehicle/driver/register';
-        resource = `/driver/${params.data.personId}/vehicle/${params.data.vehicleId}`;
+        resource = `driver/${params.data.personId}/vehicle/${params.data.vehicleId}/register`;
+        console.log(resource);
 
         const { headers } = useHeaderWithToken()
 
@@ -119,6 +141,29 @@ export const routeDataProvider =  {
             //body: JSON.stringify(params.data),
             headers: headers
         }).then(({ json, status }) => {
+            console.log(status);
+            return {
+                data: {
+                    status: status,
+                    message: json.content
+                }
+            }
+        });
+    },
+    removeUserFromVehicle: (resource: string, params: any) => {
+
+        resource = 'vehicle/driver/register';
+        resource = `driver/${params.data.personId}/vehicle/${params.data.vehicleId}/remove`;
+        console.log(resource);
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${ apiUrl }/${ resource }`, {
+            method: 'DELETE',
+            //body: JSON.stringify(params.data),
+            headers: headers
+        }).then(({ json, status }) => {
+            console.log(status);
             return {
                 data: {
                     status: status,
