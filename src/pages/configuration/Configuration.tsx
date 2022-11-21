@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import { useTranslate, useLocaleState, useTheme, Title } from 'react-admin';
+import { useTranslate, useLocaleState, useTheme, Title, useDataProvider, useNotify } from 'react-admin';
 
 import { darkTheme, lightTheme } from '../../layout/themes';
 
@@ -11,6 +11,22 @@ const Configuration = () => {
     const translate = useTranslate();
     const [locale, setLocale] = useLocaleState();
     const [theme, setTheme] = useTheme();
+
+
+    const dataProvider = useDataProvider();
+    const notify = useNotify();
+
+
+    React.useEffect(()=>{
+        dataProvider.profile('users')
+            .then(({ data }: any) => {
+                console.log(data)
+                
+            })
+            .catch((error: any) => {
+                
+            })
+    }, []);
 
     return (
         <Card>

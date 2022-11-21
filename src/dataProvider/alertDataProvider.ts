@@ -31,6 +31,24 @@ export const alertDataProvider = {
             }
         });
     },
+    notificationsChecked: (resource: string, params: any) => {
+
+
+        resource = "notification/checked"
+
+        const url = `${apiUrl}/${resource}`;
+
+        const { headers } = useHeaderWithToken()
+
+
+        return httpClient(url, { headers: headers, method: 'PATCH' }).then(({ json }) => {
+
+            return {
+                data: json,
+                total: json.length
+            }
+        });
+    },
 
     getNotifications: (resource: string, params: any) => {
 
@@ -115,11 +133,13 @@ export const alertDataProvider = {
         }
 
         return httpClient(url, { headers: headers, method: 'PUT',
-        body: JSON.stringify(data) }).then(({ json }) => {
+        body: JSON.stringify(data) }).then(({ json, status }) => {
 
             return {
-                data: json,
-                total: json.length
+                data: {
+                    status: status,
+                    message: json.content
+                }
             }
         });
     },

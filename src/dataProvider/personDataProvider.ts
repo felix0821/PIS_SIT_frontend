@@ -64,6 +64,24 @@ export const personDataProvider = {
             }
         });
     },
+    profile: (resource: string, params: any) => {
+
+        resource = 'person/profile';
+
+        const { headers } = useHeaderWithToken()
+
+        return httpClient(`${apiUrl}/${resource}`, {
+            method: 'GET',
+            headers: headers
+        }).then(({ json, status }) => {
+            return {
+                data: {
+                    status: status,
+                    message: json
+                }
+            }
+        });
+    },
 
     registerUserInRole: (resource: string, params: any) => {
 

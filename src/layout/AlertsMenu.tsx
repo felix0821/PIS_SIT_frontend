@@ -32,12 +32,15 @@ export default function AlertsMenu() {
         dataProvider.getNotifications('alerts')
             .then(({ data }: any) => {
                 setNotifications(data.allNotification)
+                console.log(data);
+                setCantAlerts(data.pending);
                 //setLoading(false);
 
             })
             .catch((error: any) => {
                 //setError(error);
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log('Error ' + error.status + ': ' + error.body.content);
+                
                 //setLoading(false);
             })
         connect()
@@ -52,6 +55,16 @@ export default function AlertsMenu() {
     }, [newNotifify])
 
     const handleToggle = () => {
+        if(cantAlerts > 0){
+            dataProvider.notificationsChecked('alerts')
+            .then(({ data }: any) => {
+                console.log(data);
+            })
+            .catch((error: any) => {
+                console.log('Error ' + error.status + ': ' + error.body.content);
+            })
+            setCantAlerts(0);
+        }
         setOpen((prevOpen) => !prevOpen);
     };
 
@@ -129,9 +142,9 @@ export default function AlertsMenu() {
                                         {notifications.map((i: AlertNotification) => (
                                             <Notification key={i.id} notification={i} handleClose={handleClose} />
                                         ))}
-                                        {notifications.map((i: AlertNotification) => (
+                                        {/*notifications.map((i: AlertNotification) => (
                                             <Notification2 key={i.id} notification={i} handleClose={handleClose} />
-                                        ))}
+                                        ))*/}
 
                                     </List>
                                 </ClickAwayListener>
