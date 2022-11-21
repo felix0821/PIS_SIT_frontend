@@ -33,6 +33,28 @@ export const routeDataProvider =  {
             }
         });
     },
+    searchVehicleInRoute: (resource: string, props: any) => {
+        resource = "vehicle/search"
+
+        const url = `${apiUrl}/${resource}?plate=${props.key}&routeId=${props.routeId}`;
+
+        const { headers } = useHeaderWithToken()
+
+
+        return httpClient(url, {headers: headers}).then(({ json, status }) => {
+
+            let newOBJ: any[] = []
+
+            for(let i of json){
+                newOBJ = [...newOBJ, {label: i.text, value: i.value}]
+            }
+
+            return {
+                data: newOBJ,
+                status: status
+            }
+        });
+    },
     getVehicle: (resource: string, props: any) => {
         resource = "vehicle/dropdown"
 
