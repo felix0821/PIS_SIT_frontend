@@ -11,7 +11,7 @@ import {
 import { Box, Grid, Stack, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import StarRatingField from './StarRatingField';
+import StarRatingField00 from './otherrating';
 import ReviewEditToolbar from './ReviewEditToolbar';
 import { Review } from '../../types';
 
@@ -44,7 +44,7 @@ const ReviewEdit = ({ onCancel, ...props }: Props) => {
                         </Grid>
                         <Grid item xs={6}>
                             <Labeled>
-                                <StarRatingField />
+                                <StarRatingField00 />
                             </Labeled>
                         </Grid>
                     </Grid>

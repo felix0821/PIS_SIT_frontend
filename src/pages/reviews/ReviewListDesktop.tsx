@@ -8,13 +8,13 @@ import {
 } from 'react-admin';
 
 
-import StarRatingField from './StarRatingField';
+import StarRatingField00 from './otherrating';
 import rowStyle from './rowStyle';
 
 import BulkAcceptButton from './BulkAcceptButton';
 import BulkRejectButton from './BulkRejectButton';
 import { Rating, Typography } from '@mui/material';
-import StarRatingField2 from './StarRatingField2';
+import StarRatingField from './StarRatingField';
 import Temporal from './Temporal';
 
 export interface ReviewListDesktopProps {
@@ -53,7 +53,7 @@ const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
         <TextField source="index" label="" />
         <TextField source="routeName" label="Nombre de ruta" />
         
-        <StarRatingField2 size="small" label="Calififcación" />
+        <StarRatingField size="small" label="Calificación" />
         <Temporal label="Comentario"></Temporal>
         <DateField source='time' label="Fecha y Hora" />
     </Datagrid>

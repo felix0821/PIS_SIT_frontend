@@ -51,7 +51,7 @@ const customSpanishMessages: TranslationMessages = {
             name: 'Calificación |||| Calificaciones',
         },
         manageSIT:{
-            name: 'Gestion SIT |||| Gestion SIT',
+            name: 'Gestion SIT',
             routes: {
                 name: 'Ruta |||| Rutas',
             },

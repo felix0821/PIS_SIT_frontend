@@ -62,7 +62,7 @@ export default function DriverForm(props: DriverFormProps) {
                 return data;
             })
             .catch((error: any) => {
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log(error.body.content)
                 return error;
             })
 
@@ -93,7 +93,7 @@ export default function DriverForm(props: DriverFormProps) {
                 return data;
             })
             .catch((error: any) => {
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log(error.body.content)
                 return error;
             })
 
@@ -116,8 +116,8 @@ export default function DriverForm(props: DriverFormProps) {
                 return data;
             })
             .catch((error: any) => {
-                console.log('Error ' + error.status + ': ' + error.body.content)
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                console.log(error.body.content)
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -141,7 +141,7 @@ export default function DriverForm(props: DriverFormProps) {
             })
             .catch((error: any) => {
                 //setError(error);
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log(error.body.content)
                 //setLoading(false);
             })
 
@@ -200,7 +200,7 @@ export default function DriverForm(props: DriverFormProps) {
             })
             .catch((error: any) => {
                 //setError(error);
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log(error.body.content)
                 //setLoading(false);
                 setLoading(false);
             })

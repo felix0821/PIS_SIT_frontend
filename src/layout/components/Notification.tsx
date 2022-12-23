@@ -1,4 +1,4 @@
-import { ListItem, ButtonGroup, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, Typography, Button, Modal, Box, TextField, CardContent, CircularProgress } from '@mui/material'
+import { ListItem, ButtonGroup, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, Typography, Button, Modal, Box, TextField, CardContent, CircularProgress, Chip } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ReportIcon from '@mui/icons-material/Report';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -107,7 +107,7 @@ export const Notification = ({ notification, handleClose }: NotificationProps) =
         dataProvider.validateAlert('alerts', { placa: vehicle.value, id: notification.reference })
             .then(({ data }: any) => {
                 console.log(data)
-                notify('Code ' + data.status + ': ' + data.message, {
+                notify(data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -116,7 +116,7 @@ export const Notification = ({ notification, handleClose }: NotificationProps) =
 
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -185,7 +185,7 @@ export const Notification = ({ notification, handleClose }: NotificationProps) =
                                 >
                                     {" "}
                                 </Typography>
-                                <Moment format="LLLL" locale="es" withTitle>
+                                <Moment format="LLLL" locale="es" withTitle add={{hours: 5}}>
                                     {notification.timestamp}
                                 </Moment>
                             </React.Fragment>
@@ -227,8 +227,9 @@ export const Notification = ({ notification, handleClose }: NotificationProps) =
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     Detalles de Alerta:<br />
 
-                                    ID : {notifyDetail.id} <br />
-                                    Estado : {notifyDetail.status?.name} <br />
+                                    Estado : {"  "}
+                                    <Chip label={notifyDetail.status?.name} color={(notifyDetail.status?.id == "3000001000002")? "success" : "warning"} sx={{height: '20px'}}/>
+                                    <br />
                                     Ruta : {notifyDetail.gizRoute?.name} <br />
                                     Timestamp : {notifyDetail.timestamp} <br />
                                     Vehículo : {notifyDetail.gizVehicle} <br />

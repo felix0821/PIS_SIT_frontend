@@ -2,12 +2,16 @@ export const Enviroment = {
     /**
      * Url de api
      */
-    URL_BASE: 'https://sit-backend.herokuapp.com',
+    //URL_BASE: 'https://sit-backend.herokuapp.com',
+
+    URL_BASE: 'http://47.242.179.181:8080/controller',
 
     /**
      * Url de api
      */
-    URL_LOGIN: 'https://sit-backend.herokuapp.com/auth/login',
+    //URL_LOGIN: 'https://sit-backend.herokuapp.com/auth/login',
+    URL_LOGIN: 'http://47.242.179.181:8080/controller/auth/login',
+
 
     USERS: 'person',
     USER_REGISTER: 'person/register-web',

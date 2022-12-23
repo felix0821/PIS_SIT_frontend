@@ -21,17 +21,7 @@ const StarRatingField = ({ size = 'large' }: FieldProps & OwnProps) => {
                 whiteSpace: 'nowrap',
             }}
         >
-            {Array(record.score)
-                .fill(true)
-                .map((_, i) => (
-                    <Icon
-                        key={i}
-                        sx={{
-                            width: size === 'large' ? 20 : 15,
-                            height: size === 'large' ? 20 : 15,
-                        }}
-                    />
-                ))}
+            <Rating name="read-only" value={record.score} readOnly />
         </Box>
     );
 };

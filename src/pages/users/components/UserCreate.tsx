@@ -109,7 +109,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -136,7 +136,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -155,7 +155,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
 
         let createUserRes = await dataProvider.registerUser('users', { data: values })
             .then(({ data }: any) => {
-                notify('Code ' + data.status + ': ' + 'Usuario creado con id ' + data.message, {
+                notify('Usuario creado con id ' + data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -163,7 +163,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -195,7 +195,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     const setRoleInUser = async (userId: any, roleId: any) => {
         let createUserInRole = await dataProvider.registerUserInRole('users', { data: { userId: userId, roleId: roleId } })
             .then(({ data }: any) => {
-                notify('Code ' + data.status + ': ' + 'Rol asignado ' + data.message, {
+                notify('Rol asignado ' + data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -203,7 +203,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -220,7 +220,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
     const removeRoleFromUser = async (userId: any, roleId: any) => {
         let createUserInRole = await dataProvider.removeRoleFromUser('users', { data: { userId: userId, roleId: roleId } })
             .then(({ data }: any) => {
-                notify('Code ' + data.status + ': ' + 'Rol eliminado ' + data.message, {
+                notify('Rol eliminado ' + data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -228,7 +228,7 @@ const UserCreate = ({ onCancel, ...props }: Props) => {
                 return data
             })
             .catch((error: any) => {
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,

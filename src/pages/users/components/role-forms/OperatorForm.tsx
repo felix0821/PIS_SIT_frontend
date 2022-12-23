@@ -70,7 +70,7 @@ export default function OperatorForm(props: OperatorFormProps) {
 
         let assignConcession = await dataProvider.registerUserInConcesionary('routes', { data: { routeId: id.value, personId: props.userId } })
             .then(({ data }: any) => {
-                notify('Code ' + data.status + ': ' + '' + data.message, {
+                notify(data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -80,7 +80,7 @@ export default function OperatorForm(props: OperatorFormProps) {
             .catch((error: any) => {
                 //setError(error)
                 //setLoading(false);
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -115,7 +115,7 @@ export default function OperatorForm(props: OperatorFormProps) {
 
         let deleteRoute = await dataProvider.removeUserFromConcesionary('routes', { data: { routeId: id.value, personId: props.userId } })
             .then(({ data }: any) => {
-                notify('Code ' + data.status + ': ' + '' + data.message, {
+                notify(data.message, {
                     type: 'success',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -125,7 +125,7 @@ export default function OperatorForm(props: OperatorFormProps) {
             .catch((error: any) => {
                 //setError(error)
                 //setLoading(false);
-                notify('Error ' + error.status + ': ' + error.body.content, {
+                notify(error.body.content, {
                     type: 'warning',
                     messageArgs: { smart_count: 1 },
                     undoable: false,
@@ -151,7 +151,7 @@ export default function OperatorForm(props: OperatorFormProps) {
             })
             .catch((error: any) => {
                 //setError(error);
-                console.log('Error ' + error.status + ': ' + error.body.content)
+                console.log(error.body.content)
                 //setLoading(false);
             })
 

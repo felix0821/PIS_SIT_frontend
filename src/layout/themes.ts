@@ -8,6 +8,9 @@ export const darkTheme = {
         secondary: {
             main: '#FBBA72',
         },
+        background: {
+            default: '#000',
+        },
         mode: 'dark' as 'dark', // Switching the dark mode on is a single property value change.
     },
     sidebar: {

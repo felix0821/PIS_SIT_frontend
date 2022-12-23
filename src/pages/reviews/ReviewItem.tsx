@@ -5,6 +5,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Link as MuiLink,
+    Box,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
@@ -13,9 +14,11 @@ import {
     FunctionField,
     TextField,
     useRecordContext,
+    DateField,
 } from 'react-admin';
 
 import { Review, Customer } from '../../types';
+import StarRatingField from './StarRatingField';
 
 export const ReviewItem = () => {
     const record = useRecordContext<Review>();
@@ -26,8 +29,8 @@ export const ReviewItem = () => {
     return (
         <MuiLink
             to={createPath({
-                resource: 'reviews',
-                type: 'edit',
+                resource: '',
+                type: '',
                 id: record.id,
             })}
             component={Link}
@@ -35,48 +38,33 @@ export const ReviewItem = () => {
             color="inherit"
         >
             <ListItem button>
-                <ListItemAvatar>
-                    <ReferenceField
-                        source="customer_id"
-                        reference="customers"
-                        link={false}
-                    >
-                        
-                    </ReferenceField>
-                </ListItemAvatar>
+                <Box display='flex' width='100%'>
                 <ListItemText
                     primary={
                         <Fragment>
-                            <ReferenceField
-                                source="customer_id"
-                                reference="customers"
-                                link={false}
-                            >
-                                <FunctionField
-                                    render={(record?: Customer) =>
-                                        record
-                                            ? `${record.first_name} ${record.last_name}`
-                                            : ''
-                                    }
+                            <TextField
+                                    source="routeName"
                                     variant="subtitle1"
                                 />
-                            </ReferenceField>{' '}
-                            on{' '}
-                            <ReferenceField
-                                source="product_id"
-                                reference="products"
-                                link={false}
-                            >
-                                <TextField
-                                    source="reference"
-                                    variant="subtitle1"
-                                />
-                            </ReferenceField>
                         </Fragment>
                     }
                     secondary={record.comment}
                     secondaryTypographyProps={{ noWrap: true }}
                 />
+                <ListItemText
+                sx={
+                    { display: 'flex', justifyContent: 'end', marginLeft: 2}
+                }
+                    primary={
+                        <Fragment>
+                            <StarRatingField size="small" label="Calificación" />
+                            <DateField source='time' label="Fecha y Hora" />
+                        </Fragment>
+                    }
+                    secondaryTypographyProps={{ noWrap: true }}
+                />
+                </Box>
+                
             </ListItem>
         </MuiLink>
     );

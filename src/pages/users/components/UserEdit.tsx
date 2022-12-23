@@ -106,22 +106,26 @@ const UserEdit = ({ onCancel, ...props }: Props) => {
                             <TextInput
                                 source="name"
                                 maxRows={1}
+                                label="Nombres"
                                 fullWidth
                             />
                             <TextInput
                                 source="lastnameFather"
                                 maxRows={1}
+                                label="Apellido paterno"
                                 fullWidth
                             />
                             <TextInput
                                 source="lastnameMother"
                                 maxRows={1}
+                                label="Apellido materno"
                                 fullWidth
                             />
 
                             <DateInput
                                 source="birth"
                                 maxRows={1}
+                                label="Fecha de Nacimiento"
                                 fullWidth
                             />
 
