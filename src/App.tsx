@@ -17,6 +17,7 @@ import polyglotI18nProvider from 'ra-i18n-polyglot';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
+import alerts from './pages/alerts';
 
 const translations = { 'en': en, 'es': es };
 
@@ -51,7 +52,7 @@ const App = () => {
             
         >
             <Resource name="users" {...users} />
-            <Resource name="alerts" list={ListGuesser} />
+            <Resource name="alerts" {...alerts} />
             <Resource name="units" {...vehicles} />
             <Resource name="reviews" {...reviews} />
             <Resource name="routes" {...routes} />

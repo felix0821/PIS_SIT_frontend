@@ -2,6 +2,8 @@ import {
     Identifier,
     Datagrid,
     TextField,
+    DateField,
+    useRecordContext,
 } from 'react-admin';
 
 import rowStyle from './rowStyle';
@@ -28,10 +30,26 @@ const VehicleListDesktop = ({ selectedRow }: VehicleListDesktopProps) => (
             },
         }}
     >
-        <TextField source="value" label="ID" />
-        <TextField source="text" label="Nombre de vehículo" />
-        <TextField source="conductor" label="Nombre de conductor" />
+        <TextField source="plate" label="Placa" />
+        <TextField source="codeSoat" label="Código de SOAT" />
+        <DateField source="register" label="Fecha de registro" />
+        
     </Datagrid>
 );
+
+
+interface DriverFieldProps {
+    source: any,
+    label: any
+}
+
+const DriverField = ({ source, label }: DriverFieldProps) => {
+    const record = useRecordContext();
+    //<Chip label={record.status?.name} color={(record.status?.id == "3000001000002")? "success" : "warning"} sx={{height: '20px'}}/>
+    return (
+        <p>{record.driver}</p>
+    ) ;
+}
+
 
 export default VehicleListDesktop;

@@ -18,7 +18,7 @@ export const useAlertNotificationWebSocket = () => {
         //let Sock = new SockJS('http://localhost:3334/notifications');
         
         stompClient = over(Sock);
-        //stompClient.debug = () => {};
+        stompClient.debug = () => {};
         stompClient.connect({}, onConnected, onError);
     }
     const onConnected = () => {

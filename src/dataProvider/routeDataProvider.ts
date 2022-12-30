@@ -36,7 +36,9 @@ export const routeDataProvider =  {
     searchVehicleInRoute: (resource: string, props: any) => {
         resource = "vehicle/search"
 
-        const url = `${apiUrl}/${resource}?plate=${props.key}&routeId=${props.routeId}`;
+        const url = `${apiUrl}/${resource}?plate=${props.key}`;
+
+
 
         const { headers } = useHeaderWithToken()
 
@@ -195,22 +197,27 @@ export const routeDataProvider =  {
         });
     },
     getList: (resource: string, params: any) => {
-        resource = "vehicle/dropdown?transportCompany=3"
+        const transportCompany=params.meta.transportCompany;
+        resource = "vehicle/list"
 
-        const url = `${apiUrl}/${resource}`;
+        const { page, perPage } = params.pagination;
+
+        let url = `${apiUrl}/${resource}?page=${page}&perPage=${perPage}`;
+
+        if(params.meta.transportCompany != ""){
+            url = url+"&"+"transportCompany="+params.meta.transportCompany ;
+        }
 
         const { headers } = useHeaderWithToken()
 
 
         return httpClient(url, {headers: headers}).then(({ json }) => {
-            
-            for(let i=0; i<json.length;++i){
-                json[i].id = json[i].value
+            for(let i=0; i<json.allItems.length;++i){
+                json.allItems[i].id = json.allItems[i].plate
             }
-
             return {
-                data: json,
-                total: json.length
+                data: json.allItems,
+                total: json.elements
             }
         });
     },

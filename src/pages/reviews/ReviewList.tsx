@@ -33,7 +33,7 @@ const ReviewList = () => {
                         }),
                     marginRight: !!match ? '400px' : 0,
                 }}
-                filters={reviewFilters}
+                //filters={false}
                 perPage={10}
                 sort={{ field: 'date', order: 'DESC' }}
             >

@@ -13,7 +13,7 @@ export default function CustomSelect(props: any) {
 
 
     return (
-        <FormControl sx={{ m: 1, maxWidth: 500}} fullWidth>
+        <FormControl sx={{ m: 1, maxWidth: 300}} fullWidth>
             <InputLabel id="demo-simple-select-autowidth-label" >{label}</InputLabel>
             <Select
                 labelId="demo-simple-select-autowidth-label"

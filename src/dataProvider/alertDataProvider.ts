@@ -15,19 +15,25 @@ export const alertDataProvider = {
 
     getList: (resource: string, params: any) => {
 
+        console.log(params.meta);
+        resource = "requirement-alert/list"
 
-        resource = "requirement-alert"
+        const { page, perPage } = params.pagination;
+        console.log(page)
+        
+        let url = `${apiUrl}/${resource}?page=${page}&perPage=${perPage}`;
 
-        const url = `${apiUrl}/${resource}`;
+        if(params.meta.route != ""){
+            url = url+"&"+"route="+params.meta.route;
+        }
+
 
         const { headers } = useHeaderWithToken()
-
-
         return httpClient(url, { headers: headers }).then(({ json }) => {
 
             return {
-                data: json,
-                total: json.length
+                data: json.allItems,
+                total: json.elements
             }
         });
     },

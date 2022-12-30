@@ -42,6 +42,18 @@ export interface Vehicle extends RaRecord {
     text: string,
 } 
 
+export interface Alert extends RaRecord {
+    id: string,
+    gizRoute?: {
+        id: string,
+        name: string
+    },
+    timestamp?: string,
+    status?: {
+        id: string,
+        name: string
+    }
+}
 
 
 
